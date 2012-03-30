@@ -3,8 +3,8 @@
 # Git Nowhere
 #-------------------------------------------------------------------
 #
-# Use before "$ git commit" to manually set the date to GMT in order
-# to obscure timezone-based geodata tracking.
+# Use: Run as "$ . ./gitdate.sh" before "$ git commit" to manually set
+# the date to GMT in order to obscure timezone-based geodata tracking.
 #
 # @author Isis Lovecuft, 0x2CDB8B35 isis@patternsinthevoid.net
 # @ v0.0.1
@@ -42,7 +42,5 @@ if [ "${#HOUR}" -eq "1" ]; then
     HOUR=$(printf "%02d" $HOUR)
 fi 
 
-GIT_AUTHOR_DATE=$(echo $DAY $MONTH $DATE $HOUR:$MINUTE:$SECOND $YEAR $TIMEZONE)
-GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"
-export GIT_AUTHOR_DATE
-export GIT_COMMITTER_DATE
+export GIT_AUTHOR_DATE=$(echo "$DAY $MONTH $DATE $HOUR:$MINUTE:$SECOND $YEAR $TIMEZONE")
+export GIT_COMMITTER_DATE=$GIT_AUTHOR_DATE
