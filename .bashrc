@@ -141,8 +141,18 @@ alias dev='cd /home/isis/dev'
 alias arm='sudo -u debian-tor arm'
 alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
 alias 30='dmesg | tail -n 30'
-alias things='-c 2 google.com'
-alias no='sudo killall'
+alias check='ping -c 2 google.com'
+alias fuck='sudo killall'
+alias rms='rm ./*~'
+alias rmp='rm ./\#*#'
+alias rme='rm ./*~ && rm ./\#*#'
+alias rmc='rm ./*.pyc'
+alias tagsc='find . -name "*.[ch]" | xargs etags'
+alias tagsp='find . -type f -name "*.py" | xargs etags'
+alias gitdate='. /home/isis/scripts/gitdate.sh'
+alias pdx='/home/isis/scripts/pdx.sh'
+alias eip='/home/isis/scripts/ip_external.sh'
+
 
 # Export path for android NDK
 export NDKROOT=/home/isis/dev/android/android-ndk-r7
