@@ -133,7 +133,7 @@ fi
 
 # Extra user defined alaises:
 alias e='emacs -nw'
-alias s='sudo'
+alias s='sudo '
 alias whack='/home/isis/scripts/mod_wifi.sh'
 alias ag='apt-get'
 alias acs='apt-cache search'
