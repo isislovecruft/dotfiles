@@ -3,6 +3,7 @@
 ;;
 ;;written by Isis Lovecruft
 ;;
+;;v.0.0.3 - Make sure "tab" is always four spaces
 ;;v.0.0.2 - Fix Tab funtionality and disable Yasnippet
 ;;v.0.0.1 - Initial config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12,6 +13,25 @@
 (add-to-list 'load-path "~/.emacs.d/vendor")
 (progn (cd "~/.emacs.d/vendor")
        (normal-top-level-add-subdirs-to-load-path))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Four spaces, not tabs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4) ; set tab to 4 for all buffers
+(custom-set-variables
+ '(fill-column 78)
+ '(tab-always-indent (quote complete)))
+(custom-set-faces)
+
+(add-hook 'html-mode-hook
+        (lambda ()
+          ;; Default indentation is 2 spaces, changing to 4.
+          (set (make-local-variable 'sgml-basic-offset) 4)))
+;(add-hook 'html-mode-hook
+;              (lambda ()
+;                (setq indent-line-function 'indent-relative)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python Autocompletion
