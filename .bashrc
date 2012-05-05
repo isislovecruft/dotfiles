@@ -153,6 +153,7 @@ alias gitdate='. /home/isis/scripts/gitdate.sh'
 alias pdx='/home/isis/scripts/pdx.sh'
 alias eip='/home/isis/scripts/ip_external.sh'
 alias hyde='/home/isis/dev/web/hyde/hyde.py'
+#alias tor='sudo tor -f /etc/tor/torrc'
 
 # Export path for android NDK
 export NDKROOT=/home/isis/dev/android/android-ndk-r7
