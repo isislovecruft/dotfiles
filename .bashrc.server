@@ -147,7 +147,7 @@ alias tagsc='find . -name "*.[ch]" | xargs etags'
 alias tagsp='find . -type f -name "*.py" | xargs etags'
 #alias arm='sudo -u debian-tor arm'
 alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
-alias tor='/usr/local/bin/tor -f /etc/tor/torrc'
+alias tor='sudo -u debian-tor /usr/local/bin/tor -f /etc/tor/torrc'
 
 
 export PERL_LOCAL_LIB_ROOT="/root/perl5";
