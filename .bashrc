@@ -140,7 +140,8 @@ alias acs='apt-cache search'
 alias dev='cd /home/isis/dev'
 alias arm='sudo -u debian-tor arm'
 alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
-alias 30='dmesg | tail -n 30'
+alias 30='dmesg | tail -n 30 | ccze -A'
+alias 300='dmesg | tail -n 300 | ccze -A'
 alias check='ping -c 2 google.com'
 alias fuck='sudo killall'
 alias rms='rm ./*~'
@@ -150,10 +151,12 @@ alias rmc='rm ./*.pyc'
 alias tagsc='find . -name "*.[ch]" | xargs etags'
 alias tagsp='find . -type f -name "*.py" | xargs etags'
 alias gitdate='. /home/isis/scripts/gitdate.sh'
-alias pdx='/home/isis/scripts/pdx.sh'
 alias eip='/home/isis/scripts/ip_external.sh'
+alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
 alias hyde='/home/isis/dev/web/hyde/hyde.py'
 #alias tor='sudo tor -f /etc/tor/torrc'
+alias hieroglyph="echo -e \"\033(0\""
+alias keysign="/home/isis/scripts/keysign.sh "
 
 # Export path for android NDK
 export NDKROOT=/home/isis/dev/android/android-ndk-r7
