@@ -24,7 +24,7 @@ TOR_OR_PORT="9001"
 TOR_DIR_PORT="9030"
 
 TOR_SOCKS_PORT="59050"
-#TOR_SOCKS_ALT_PORT="9666"
+TOR_SOCKS_ALT_PORT="9050"
 TOR_CONTROL_PORT="9051"
 
 ## Set to true to set up a Transparent Proxy for all traffic for $TRANSPROXY_USER.
@@ -34,8 +34,8 @@ TOR_TRANS_PORT="9040"
 TOR_DNS_PORT="5353"
 TRANSPROXY_USER="anonymous"
 
-SSH_PORT="2222"
-#SSH_ALT_PORT="22"
+SSH_PORT="22"
+SSH_ALT_PORT="2222"
 
 ## Set to true to allow Mosh connections. See https://mosh.mit.edu/
 MOSH=true
