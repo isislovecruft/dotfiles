@@ -155,8 +155,19 @@ alias eip='/home/isis/scripts/ip_external.sh'
 alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
 alias hyde='/home/isis/dev/web/hyde/hyde.py'
 #alias tor='sudo tor -f /etc/tor/torrc'
+#alias tor='sudo -u debian-tor tor -f /etc/tor/torrc'
 alias hieroglyph="echo -e \"\033(0\""
 alias keysign="/home/isis/scripts/keysign.sh "
+alias mailwithtor="sudo socat -d -d -d -lu TCP4-LISTEN:2525,fork SOCKS4A:localhost:box658.bluehost.com:465,socksport=9050"
+alias fwup="/home/isis/scripts/firewall.client.sh"
+alias fwdown="sudo iptables -F; sudo iptables -X"
+alias offlineimap="offlineimap -c /home/isis/.mailrc/offlineimaprc"
+
+# Let's pretend we're in the future
+set TZ=UTC
+
+# Qu'est-que fuck is with insserv, anyway?
+#exec /home/isis/scripts/firewall.client.sh
 
 # Export path for android NDK
 export NDKROOT=/home/isis/dev/android/android-ndk-r7
@@ -173,3 +184,6 @@ export PATH=${PATH}:/home/isis/dev/android/android-sdk-linux/tools:/home/isis/de
 
 # Export path to hyde.py
 export PATH=${PATH}:/home/isis/dev/web/hyde/
+
+# Export path to homebrewed scripts directory
+export PATH=${PATH}:/home/isis/scripts
