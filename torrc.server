@@ -20,8 +20,7 @@ SocksListenAddress 127.0.0.1
 ## TOR CONTROLLERS
 
 ControlPort 9051
-HashedControlPassword fixme # tor --hash-password <passwd>
-#CookieAuthentication 1
+HashedControlPassword 16:XXXXXXXX
 
 ## RELAY PORTS
 ORPort 9001
@@ -33,7 +32,7 @@ DirPort 9030
 ## LOGGING
 ###############################
 SafeLogging 1
-Log info file /$HOME/.tor/logs/info.log
+Log info file /var/log/tor/log/info.log
 #Log notice syslog
 #Log debug stderr
 
@@ -41,8 +40,7 @@ Log info file /$HOME/.tor/logs/info.log
 ## PROCESS AND FILE SETTINGS
 ###############################
 RunAsDaemon 1
-#User debian-tor
-DataDirectory $HOME/.tor
+DataDirectory /home/isis/.tor
 
 ###############################
 ## HIDDEN SERVICES
@@ -66,10 +64,10 @@ DataDirectory $HOME/.tor
 
 ## BASICS
 
-Nickname givemeanickname
-Address fixthis
+Nickname XXXXXXXXX
+Address XXXXXXXXX
 ContactInfo 4096R/2CDB8B35 Isis <isis at patternsinthevoid dot net>
-MyFamily $0EBDD10872379A0BE6E9B3A57155C074A17CE23E,$D48482E52C4349D5AAF1191A1E902442F23BE1F5
+MyFamily $0EBDD10872379A0BE6E9B3A57155C074A17CE23E,$D48482E52C4349D5AAF1191A1E902442F23BE1F5,$DA07FCB81D4C216658162F990E5C823917700A47
 PublishServerDescriptor v2,v3
 
 ## BANDWIDTH LIMITS
@@ -77,7 +75,7 @@ PublishServerDescriptor v2,v3
 RelayBandwidthRate 100 KB
 RelayBandwidthBurst 150 KB
 AccountingMax 100GB
-AccountingStart day 00:00
+#AccountingStart day 00:00
 AccountingStart month 1 00:01
 CountPrivateBandwidth 1
 
@@ -104,6 +102,10 @@ ExtraInfoStatistics 1
 
 #BridgeRelay 1
 #ExitPolicy reject *:*
+
+## DEBUGGING
+
+DisableDebuggerAttachment 0
 
 #################################
 ## PLUGGABLE TRANSPORTS
