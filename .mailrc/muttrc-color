@@ -1,0 +1,91 @@
+############################################################################################
+#   Color
+#   Tuned for transparent black background
+############################################################################################
+
+color normal            cyan            black
+color hdrdefault        red             black
+color signature         blue            black
+color indicator         brightcyan      black
+color error             red             black
+color status            brightblue      black
+color tree              green           black   # the thread tree in the index menu
+color tilde             green           black
+color message           brightcyan      black
+color markers           cyan            black
+color attachment        brightmagenta   black
+color search            yellow          black   # how to hilite searches in the pager
+color quoted            brightcyan      black   # quoted text
+color quoted1           brightmagenta   black
+color quoted2           brightred       black
+color quoted3           green           black
+color quoted4           cyan            black
+color quoted5           blue            black
+color quoted6           magenta         black
+color quoted7           red             black
+color quoted8           green           black
+color quoted9           cyan            black
+color underline         brightgreen     black
+color index             green           black ~F
+color header            red             black ^(From|Subject):
+
+# point out url's
+color body              cyan           black "((ftp|http|https)://|(file|news):|www\\.)[-a-z0-9_.:]*[a-z0-9](/[^][{} \t\n\r\"<>()]*[^][{} \t\n\r\"<>().,:!])?/?"
+color body              cyan            black [-a-z_0-9.]+@[-a-z_0-9.]+    # e-mail addresses
+
+# smilies and the like
+color body brightgreen black "<[Gg]>"
+color body brightgreen black "<[Bb][Gg]>"
+# see also the variables smileys
+color body black yellow ">?[;:][-^]?[][)(><}{|/DP][)}]*"
+
+#
+#  Mono
+#
+
+mono normal             none            # normal text
+mono indicator          reverse         # actual message
+mono tree               none            # thread arrows
+mono status             reverse         # status line
+#mono error             bold
+mono error              standout
+mono message            none            # info messages
+mono quoted             bold
+mono signature          none
+mono attachment         underline       # MIME attachments
+mono search             reverse         # search matches
+mono tilde              none            # ~ at bottom of msg
+mono markers            bold            # + at beginning of wrapped lines
+mono hdrdefault         none            # default header lines
+mono bold               bold            # hilite bold patterns in body
+mono underline          underline       # hilite underlined patterns in body
+mono header             bold           "^(from|subject):"
+mono body               underline      "((ftp|http|https)://|(file|news):|www\\.)[-a-z0-9_.:]*[a-z0-9](/[^][{} \t\n\r\"<>()]*[^][{} \t\n\r\"<>().,:!])?/?"
+mono body               underline      "[-a-z_0-9.]+@[-a-z_0-9.]+"
+mono body               bold           "(^| )\\*[-a-z0-9äöüß*]+\\*[,.?]?[ \n]"
+mono body               underline      "(^| )_[-a-z0-9äöüß_]+_[,.?]?[ \n]"
+
+#############################################################################################
+# Color definitions (black background)
+#############################################################################################
+
+#color hdrdefault red default
+#color quoted brightblue default
+#color signature red default
+#color indicator brightyellow red
+#color error brightred default
+#color status yellow blue
+#color tree magenta default     # the thread tree in the index menu
+#color tilde magenta default
+#color message brightcyan default
+#color markers brightcyan default
+#color attachment brightmagenta default
+#color search default green     # how to hilite search patterns in the pager
+
+#color header brightred default ^(From|Subject):
+#color body magenta default "(ftp|http)://[^ ]+"        # point out URLs
+#color body magenta default [-a-z_0-9.]+@[-a-z_0-9.]+   # e-mail addresses
+#color underline brightgreen default
+
+# attributes when using a mono terminal
+#mono quoted bold

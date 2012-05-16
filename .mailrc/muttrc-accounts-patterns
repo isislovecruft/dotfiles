@@ -1,0 +1,10 @@
+##################################################################
+## Account hooks for patternsinthevoid.net
+##################################################################
+
+## Mailboxes
+mailboxes "$HOME/.maildir/isis@patternsinthevoid.net"
+
+set spoolfile="$HOME/.maildir/isis@patternsinthevoid.net/"
+
+set folder="$HOME/.maildir/isis@patternsinthevoid.net/"
