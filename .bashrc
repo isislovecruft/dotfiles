@@ -150,27 +150,33 @@ alias rme='rm ./*~ && rm ./\#*#'
 alias rmc='rm ./*.pyc'
 alias tagsc='find . -name "*.[ch]" | xargs etags'
 alias tagsp='find . -type f -name "*.py" | xargs etags'
-alias gitdate='. /home/isis/scripts/gitdate.sh'
-alias eip='/home/isis/scripts/ip_external.sh'
+alias boilerpy="boilerplate.sh $HOME/scripts/boilerplate-python $1 "
+alias boilersh="boilerplate.sh $HOME/scripts/boilerplate-bash $1 "
+alias gitdate='. gitdate.sh'
+alias eip='ip_external.sh'
 alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
-alias hyde='/home/isis/dev/web/hyde/hyde.py'
+alias hyde='$HOME/dev/web/hyde/hyde.py'
 #alias tor='sudo tor -f /etc/tor/torrc'
 #alias tor='sudo -u debian-tor tor -f /etc/tor/torrc'
 alias hieroglyph="echo -e \"\033(0\""
-alias keysign="/home/isis/scripts/keysign.sh "
+alias keysign="keysign.sh "
 alias mailwithtor="sudo socat -d -d -d -lu TCP4-LISTEN:2525,fork SOCKS4A:localhost:box658.bluehost.com:465,socksport=9050"
-alias fwup="/home/isis/scripts/firewall.client.sh"
+alias fwup="firewall.client.sh"
 alias fwdown="sudo iptables -F; sudo iptables -X"
 alias offlineimap="offlineimap -c /home/isis/.mailrc/offlineimaprc"
+alias mutt="mutt-patched"
 
-# Let's pretend we're in the future
-set TZ=UTC
+# Blue telephone box
+export TZ=UTC
 
 # Qu'est-que fuck is with insserv, anyway?
-#exec /home/isis/scripts/firewall.client.sh
+#$HOME/scripts/firewall.client.sh
+
+# Let's make pretty things
+$HOME/scripts/bash_pretty_login.py
 
 # Export path for android NDK
-export NDKROOT=/home/isis/dev/android/android-ndk-r7
+export NDKROOT=$HOME/dev/android/android-ndk-r7
 
 # Export paths for common toolchains for android NDK
 # Leave these commented out unless you're specifically cross-compiling for ArmV7
@@ -180,10 +186,13 @@ export NDKROOT=/home/isis/dev/android/android-ndk-r7
 #export CC=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-gcc
 
 # Add export path for Android SDK platform-tools and tools:
-export PATH=${PATH}:/home/isis/dev/android/android-sdk-linux/tools:/home/isis/dev/android/android-sdk-linux/platform-tools
+export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/tools:$HOME/dev/android/android-sdk-linux/platform-tools
 
 # Export path to hyde.py
-export PATH=${PATH}:/home/isis/dev/web/hyde/
+export PATH=${PATH}:$HOME/dev/web/hyde/
 
 # Export path to homebrewed scripts directory
-export PATH=${PATH}:/home/isis/scripts
+export PATH=$PATH:$HOME/scripts
+
+# Export path to git-hg
+export PATH=$PATH:$HOME/dev/git-hg/bin
