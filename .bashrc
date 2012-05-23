@@ -86,8 +86,8 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -123,7 +123,14 @@ fi
 if which tmux 2>&1 >/dev/null; then
     # If no tmux session is started; start a new session:
     if test -z ${TMUX}; then
-	tmux
+    # We actually need to attach to it, because tmux.conf starts
+    # session for us:
+	#tmux attach
+        # that didn't work; maybe we don't want to attach?
+        tmux attach
+    # Since this usually occurs just after boot, start the
+    # firewall while we're at it:
+    $HOME/scripts/firewall.client.sh
     fi
     # When quitting tmux, try to attach:
     while test -z ${TMUX}; do
@@ -133,13 +140,16 @@ fi
 
 # Extra user defined alaises:
 alias e='emacs -nw'
+alias ec='emacsclient -t'
+alias es='emacs -nw --daemon'
 alias s='sudo '
 alias whack='/home/isis/scripts/mod_wifi.sh'
 alias ag='apt-get'
 alias acs='apt-cache search'
 alias dev='cd /home/isis/dev'
+alias back='cd $OLDPWD'
 alias arm='sudo -u debian-tor arm'
-alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
+alias sprunge="curl --socks4a 127.0.0.1:59050 -A 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0' -F 'sprunge=<-' http://sprunge.us"
 alias 30='dmesg | tail -n 30 | ccze -A'
 alias 300='dmesg | tail -n 300 | ccze -A'
 alias check='ping -c 2 google.com'
@@ -159,20 +169,25 @@ alias hyde='$HOME/dev/web/hyde/hyde.py'
 #alias tor='sudo tor -f /etc/tor/torrc'
 #alias tor='sudo -u debian-tor tor -f /etc/tor/torrc'
 alias hieroglyph="echo -e \"\033(0\""
+alias pytebeat="aoss $HOME/dev/pytebeat/pytebeat.py"
 alias keysign="keysign.sh "
-alias mailwithtor="sudo socat -d -d -d -lu TCP4-LISTEN:2525,fork SOCKS4A:localhost:box658.bluehost.com:465,socksport=9050"
 alias fwup="firewall.client.sh"
-alias fwdown="sudo iptables -F; sudo iptables -X"
-alias offlineimap="offlineimap -c /home/isis/.mailrc/offlineimaprc"
+alias fwdown="sudo iptables -F; sudo iptables -X; sudo iptables -A INPUT -j ACCEPT; sudo iptables -A FORWARD -j ACCEPT; sudo iptables -A OUTPUT -j ACCEPT"
+alias offlineimap="offlineimap -c $HOME/.mailrc/offlineimaprc"
+alias torofflineimap="usewithtor offlineimap -c $HOME/.mailrc/offlineimaprc-tor"
 alias mutt="mutt-patched"
+alias N='emacs -nw $HOME/NOTES.gpg'
 
-# Blue telephone box
-export TZ=UTC
+## Environment variables:
+#export TZ=UTC                             # Blue telephone box
+#export EDITOR=/usr/bin/emacs
+#export VISUAL=/usr/bin/emacs
+export BROWSER=/usr/bin/iceweasel
 
 # Qu'est-que fuck is with insserv, anyway?
 #$HOME/scripts/firewall.client.sh
 
-# Let's make pretty things
+# Let's make pretty things!
 $HOME/scripts/bash_pretty_login.py
 
 # Export path for android NDK
