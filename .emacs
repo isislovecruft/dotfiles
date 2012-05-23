@@ -34,6 +34,71 @@
 ;                (setq indent-line-function 'indent-relative)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; EasyPG Auto(en|de)cryption
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; To use with orgmode, put this at the top of <file>.gpg:
+;; -*- mode: org -*- 
+;; -*- epa-file-encrypt-to: ("me@foo.org") -*-
+
+;; Enable EasyPG in Emacs>=23
+(require 'epa-file)
+(epa-file-enable)
+
+;; Enable EasyPG installed in path/to/epg
+;(add-to-list 'load-path "path/to/epg")
+;(require 'epa-setup)
+;(epa-file-enable)
+
+;; Disable use of gpg-agent while in remote shell:
+(defadvice epg--start (around advice-epg-disable-agent disable)
+  "Make epg--start not able to find a gpg-agent"
+  (let ((agent (getenv "GPG_AGENT_INFO")))
+    (setenv "GPG_AGENT_INFO" nil)
+    ad-do-it
+    (setenv "GPG_AGENT_INFO" agent)))
+
+;; Bind (en|dis)abling of gpg-agent to M-x epg-enable-agent and
+;; M-x epg-disable-agent respectively:
+(defun epg-disable-agent ()
+  "Make EasyPG bypass any gpg-agent"
+  (interactive)
+  (ad-enable-advice 'epg--start 'around 'advice-epg-disable-agent)
+  (ad-activate 'epg--start)
+  (message "EasyPG gpg-agent bypassed"))
+
+(defun epg-enable-agent ()
+  "Make EasyPG use a gpg-agent after having been disabled 
+ with epg-disable-agent"
+  (interactive)
+  (ad-disable-advice 'epg--start 'around 'advice-epg-disable-agent)
+  (ad-activate 'epg--start)
+  (message "EasyPG gpg-agent re-enabled"))
+
+;; Disable gpg-agent by default:
+(epg-disable-agent)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Screen lock with zone mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; NOTE: requires package xtrlock to be installed
+
+(defun lock-screen ()
+   "Lock screen using (zone) and xtrlock calls M-x zone on all frames
+ and runs xtrlock"
+   (interactive)
+   (save-excursion
+     ;(shell-command "xtrlock &")
+     (set-process-sentinel
+      (start-process "xtrlock" nil "xtrlock")
+      '(lambda (process event)
+         (zone-leave-me-alone)))
+     (zone-when-idle 1)))
+
+;; Activate the zone mode screensaver!
+;;(lock-screen)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python Autocompletion
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
