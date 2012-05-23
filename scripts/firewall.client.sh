@@ -11,6 +11,8 @@
 #
 # Changelog:
 #
+# v0.0.3: Fixed quotes around $TRANSPROXY_USER variable. Fixed blocking of Tor's
+#         DNSPort. Allow incoming Bittorrent requests.
 # v0.0.2: Added TransProxy user rules. TransProxy'd user also has access to Tor's
 #         ControlPort.
 # v0.0.1: Basic stupid firewall.
@@ -25,10 +27,10 @@ TOR_SOCKS_PORT="59050"
 #TOR_SOCKS_ALT_PORT="9050"
 TOR_CONTROL_PORT="9051"
 
-TRANSPROXY=false
+TRANSPROXY=true
 TOR_TRANS_PORT="9040"
 TOR_DNS_PORT="5353"
-TRANSPROXY_USER="anonymous"
+TRANSPROXY_USER=anonymous
 
 SSH_PORT="22"
 SSH_ALT_PORT="2222"
@@ -41,6 +43,8 @@ RPCBIND_PORT="111"
 RPCBIND_PORT2="33939"
 CUPS_PORT="631"
 MPD_PORT="6600"
+ALLOW_BITTORRENT=false
+BITTORRENT_TRACKER="6881"
 
 ## UNCOMMENT THE FOLLOWING IF YOUR VPS PROVIDER MAKES YOU BLOCK BITTORRENT OVER TOR
 ## (OR TELL THEM TO EAT SNOT):
@@ -119,7 +123,8 @@ fi
 
 ## REJECT MPD ACCESS FOR EVERYONE EXCEPT LOCALHOST
 if [[ "$MPD_PORT" != "" ]]; then
-    sudo iptables -A INPUT -p tcp -s localhost --dport $MPD_PORT -j REJECT --reject-with tcp-reset
+    #sudo iptables -A INPUT -p tcp -s localhost --dport $MPD_PORT -j REJECT --reject-with tcp-reset
+    sudo iptables -A INPUT ! -i lo -p tcp --dport $MPD_PORT -j REJECT --reject-with tcp-reset
 fi
 
 ## REJECT SocksPort REQUESTS FOR ALL EXCEPT LOCALHOST 
@@ -137,8 +142,9 @@ if [[ "$TOR_CONTROL_PORT" != "" ]]; then
     sudo iptables -A INPUT ! -i lo -p tcp --dport $TOR_CONTROL_PORT -j REJECT --reject-with tcp-reset
 fi
 
-## ACCEPT LOOPBACK, REJECT ACCESS TO LOCALHOST FROM ALL BUT LOOPBACK
+## ACCEPT LOOPBACK, REJECT ACCESS TO LOCALHOST FROM ALL BUT LOOPBACK (And bridge)
 sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -i br0 -j ACCEPT
 sudo iptables -A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
 
 ## ACCEPT ESTABLISHED AND RELATED TRAFFIC
@@ -164,6 +170,11 @@ fi
 ## Allow HTTP/HTTPS
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+## Allow Bittorrent peers to connect to us
+if $ALLOW_BITTORRENT ; then
+    sudo iptables -A INPUT -p tcp --dport $BITTORRENT_TRACKER -j ACCEPT
+fi
 
 ####################################################################################
 ## TRANSPROXY CONFIGURATION
@@ -198,20 +209,23 @@ sudo iptables -A INPUT -p icmp -j REJECT
 ## ----------------
 ## TCP/UDP SETTINGS
 ## ----------------
-if $TRANSPROXY ; then
-    ## ALSO ANONYMOUS USER ACCESS TO Tor's ControlPort:
+if [[ "$TRANSPROXY" == "true" ]]; then
+    ## ALLOW ANONYMOUS USER ACCESS TO Tor's ControlPort:
     if [[ "$TOR_CONTROL_PORT" != "" ]]; then
-        sudo iptables -t nat -A OUTPUT -p tcp -m owner --uid-owner anonymous -m tcp --syn -d 127.0.0.1 --dport $TOR_CONTROL_PORT -j ACCEPT
+        sudo iptables -t nat -A OUTPUT -p tcp -m owner --uid-owner $TRANSPROXY_USER -m tcp --syn -d 127.0.0.1 --dport $TOR_CONTROL_PORT -j ACCEPT
     fi
 
     ## REDIRECT NON-LOOPBACK TCP TO TransPort:
     if [[ "$TOR_TRANS_PORT" != "" ]]; then
-        sudo iptables -t nat -A OUTPUT ! -i lo -p tcp -m owner --uid-owner anonymous -m tcp -j REDIRECT --to-ports $TOR_TRANS_PORT
+        sudo iptables -t nat -A OUTPUT ! -o lo -p tcp -m owner --uid-owner $TRANSPROXY_USER -m tcp -j REDIRECT --to-ports $TOR_TRANS_PORT
     fi
 
     ## REDIRECT NON-LOOPBACK DNS TO DNSPort:
     if [[ "$TOR_DNS_PORT" != "" ]]; then
-        sudo iptables -t nat -A OUTPUT ! -i lo -p udp -m owner --uid-owner anonymous -m udp --dport 53 -j REDIRECT --to-ports $TOR_DNS_PORT
+        sudo iptables -t nat -A OUTPUT ! -o lo -p udp -m owner --uid-owner $TRANSPROXY_USER -m udp --dport 53 -j REDIRECT --to-ports $TOR_DNS_PORT
+        ## AND THEN ALLOW THE TOR_DNS_PORT:
+        sudo iptables -A INPUT -p udp --dport $TOR_DNS_PORT -j ACCEPT
+        sudo iptables -A INPUT -p udp --sport $TOR_DNS_PORT -j ACCEPT
     fi
 
     ## ACCEPT OUTGOING TRAFFIC FOR ANONYMOUS ONLY FROM THE TransPort AND DNSPort:

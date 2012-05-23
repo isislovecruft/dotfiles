@@ -29,10 +29,10 @@ TOR_CONTROL_PORT="9051"
 
 ## Set to true to set up a Transparent Proxy for all traffic for $TRANSPROXY_USER.
 ## see https://trac.torproject.org/projects/tor/wiki/doc/TransparentProxy
-TRANSPROXY=true
+TRANSPROXY=false
 TOR_TRANS_PORT="9040"
 TOR_DNS_PORT="5353"
-TRANSPROXY_USER="anonymous"
+TRANSPROXY_USER=anonymous
 
 SSH_PORT="22"
 SSH_ALT_PORT="2222"
@@ -289,7 +289,7 @@ sudo iptables -A INPUT -p icmp -j REJECT
 ## ----------------
 ## TCP/UDP SETTINGS
 ## ----------------
-if $TRANSPROXY ; then
+if [[ "$TRANSPROXY" == "true" ]]; then
     if [[ "$TRANSPROXY_USER" != "" ]]; then
 
         ## ALLOW ANONYMOUS USER ACCESS TO Tor's ControlPort:
@@ -305,6 +305,9 @@ if $TRANSPROXY ; then
          ## REDIRECT NON-LOOPBACK DNS TO DNSPort:
         if [[ "$TOR_DNS_PORT" != "" ]]; then
             sudo iptables -t nat -A OUTPUT ! -o lo -p udp -m owner --uid-owner $TRANSPROXY_USER -m udp --dport 53 -j REDIRECT --to-ports $TOR_DNS_PORT
+        ## AND THEN ALLOW THE TOR_DNS_PORT:
+            sudo iptables -A INPUT -p udp --dport $TOR_DNS_PORT -j ACCEPT
+            sudo iptables -A INPUT -p udp --sport $TOR_DNS_PORT -j ACCEPT
         fi
 
         ## ACCEPT OUTGOING TRAFFIC FOR ANONYMOUS ONLY FROM THE TransPort AND DNSPort:
