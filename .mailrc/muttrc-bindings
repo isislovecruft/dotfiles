@@ -1,206 +1,161 @@
-#####################################################################################
+######################################################################
 # Key bindings
-#####################################################################################
+######################################################################
+#       MAPS:
+################ALIAS           ALIAS MENU
+################ATTACH          ATTACHMENT MENU
 
-#       maps:
-################alias           alias menu
-################attach          attachment menu
    bind attach ' ' select-entry
-#   bind attach \Cg exit
-################browser         directory browser
-################compose         compose menu
-################index           message index
 
-#  bind attach S    save-entry
-#  bind index  P    recall-message # 'R'ecall-message move to 'P'
-#  bind index  L    bottom-of-page # overrides 'L'ist-reply
-#  bind index  R    list-reply     # 'L'ist-reply moved to 'R'
+################BROWSER         DIRECTORY BROWSER
+################COMPOSE         COMPOSE MENU
 
-  macro index  S    s=SPAM
-  macro pager  S    s=SPAM
+  bind index <Home>             sidebar-prev
+  bind index <End>              sidebar-next
+  bind index <Insert>           sidebar-open
+  bind index \C<Home>           sidebar-scroll-up
+  bind index \C<End>            sidebar-scroll-down
 
-  bind pager   r    reply
-  bind pager   L    list-reply
-  bind index   r    reply
-  bind index   L    list-reply
+################INDEX           MESSAGE INDEX
 
-  bind index <Home> sidebar-prev
-  bind index <End>  sidebar-next
-  bind index <Insert> sidebar-open
+  macro index  S         "<save-message>=.Spam<Enter>" "Move to Spam"
 
-#  bind index <F2>   what-key
+  bind index   r                reply
+  bind index   L                list-reply
+  bind index   <Down>           next-entry
+  bind index   <Up>             previous-entry
+  bind index   \Cn              next-entry
+  bind index   \Cp              previous-entry
+  bind index   \Cv              next-page
+  bind index   \Mv              previous-page
+  bind index   <Enter>          next-undeleted
+  bind index   <BackSpace>      previous-undeleted
+  bind index   \t               next-unread
+  bind index   ,\t              previous-unread
+  bind index   <                first-entry
+  bind index   >                last-entry
+  bind index   \Cu              half-up
+  bind index   \Cd              half-down
+  bind index   /                search
+  bind index   P                print-message
+  bind index   \t               next-unread
+  bind index   ,\t              previous-unread
 
-   macro index c "<change-folder>?<toggle-mailboxes>" "open a different folder"
-   macro pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
-   macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
-   macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
+  bind index   <Home>           sidebar-prev
+  bind index   <End>            sidebar-next
+  bind index   <Insert>         sidebar-open
+  bind index   \C<Home>         sidebar-scroll-up
+  bind index   \C<End>          sidebar-scroll-down
 
-################pgp             pgp & pgp menu {{{
-# macro   pager   \Ck     "|pgp -kaf^M"   # a comment is valid here
-# macro pager X "|morepgp^M"    # pipe PGP message to a script
-# }}}
-################postpone        postponed message recall menu
-################generic         generic keymap for all of the above {{{
-#bind generic "\e<" first-entry # emacs-like bindings for moving to top/bottom
-#bind generic \e> last-entry
-#bind generic { top-page
-#bind generic } bottom-page
-#bind generic \177 last-entry
-# }}}
-################editor          line editor {{{
+#  bind index   <F2>             what-key
+  bind index   \Cx               sync-mailbox
+
+  macro index  c "<change-folder>?<toggle-mailboxes>" "Open a different folder"
+  macro index  C "<copy-message>?<toggle-mailboxes>" "Copy a message to a mailbox"
+  macro index  M "<save-message>?<toggle-mailboxes>" "Move a message to a mailbox"
+
+  macro index  \# /bug^M  # search for bugs
+  macro index  "\"" ":set realname=\"real hairy macro\"^M:set ?realname^M"
+  macro index  <F3> ":woohoo!"
+
+  macro index,pager    \Cb "<pipe-message> urlscan<Enter>" "Call urlscan to extract URLs out of a message"
+  macro attach,compose \Cb "<pipe-entry> urlscan<Enter>" "Call urlscan to extract URLs out of a message"
+
+  macro index  h ':toggle edit_headers<enter>:set ?edit_headers<enter>' "Edit headers"
+
+# Make 'I' go to the index:
+  macro index I "<change-folder>/\n"  "Go to Index"
+
+################PGP             PGP & PGP MENU
+################POSTPONE        POSTPONED MESSAGE RECALL MENU
+################GENERIC         GENERIC KEYMAP
+################EDITOR          LINE EDITOR
+
 #  The usual DEL vs BS problem:
-#  Explicit binding of Delete (aka CTRL-? or ^?)
-#  to the backspace key does the trick:
-   bind editor <delete> delete-char
-#  bind editor \C? backspace
-#  bind editor \C? delete-char
-#  bind editor \cy eol  # make ^Y jump to the end of the line
-#  }}}
+  bind editor <delete> delete-char
+
 ################pager           text viewer
+
+  bind pager <Home>      sidebar-prev
+  bind pager <End>       sidebar-next
+  bind pager <Home>\C    sidebar-scroll-up
+  bind pager <End>\C     sidebar-scroll-down
+  bind pager <Insert>    sidebar-open
+
+  bind pager <Down>      next-line
+  bind pager <Up>        previous-line
+  bind pager \Cn         next-line
+  bind pager \Cp         previous-line
+  bind pager \Cv         next-page
+  bind pager \Mv         previous-page
+  bind pager <Enter>     next-undeleted
+  bind pager <BackSpace> previous-undeleted
+  bind pager \t          next-unread
+  bind pager ,\t         previous-unread
+  bind pager <Space>     next-line
+  bind pager <           top
+  bind pager >           bottom
+  bind pager \Cu         half-up
+  bind pager \Cd         half-down
+  bind pager /           search
+  bind pager P           print-message
+  bind pager L           list-reply
+  bind pager r           reply
+  bind pager :           enter-command
+  bind pager t           tag-message
+
+  macro pager z   ":set pager_index_lines=10\n"        "Zoom out"
+  macro pager Z   ":set pager_index_lines=0\n"         "Zoom in"
+  macro pager c   "<change-folder>?<toggle-mailboxes>" "Open a different folder"
+  macro pager S   "<save-message>=.Spam<Enter>"        "Move to Spam"
+  macro pager h ':toggle edit_headers<enter>:set ?edit_headers<enter>' "Edit headers"
+  macro pager I "<change-folder>/\n"  "Go to Index"
+
+# ROT13 - rotate alphabet by 13 characters
+   macro pager D |rot13
+
+  # rot13 by Sébastien Michel
+  macro pager X "<enter-command>\
+set display_filter = \"tr a-zA-Z n-za-mN-ZA-M\"<enter>\
+<exit><display-message>\
+" "rot13"
+
+  macro pager <esc>X "\
+<enter-command>unset display_filter<enter>\
+<exit><display-message>\
+" "re-display message"
+
 ################ Call abookadd {{{
 # macro pager a "C<$TMP_FILE>\n\n!<abookadd.pl>\n" "create an alias from a message sender"
 #macro index a "$HOME/temp/mutt4abook\n\n!abookadd.pl\n" "create an alias from a message sender"
 #macro pager a "$HOME/temp/mutt4abook\n\n!abookadd.pl\n" "create an alias from a message sender"
 # }}}
-################ Jumpings {{{
-## Jumping to the next mail that is still unread.
-## Even though I use both New and Old mails
-## I usually prefer "jump-unread" to "jump-new".
-## The TAB key (\t) is convenient for this.
-## To allow jumping to the previous unread mail
-## I use the comma as a prefix to this command:
-#  bind index   \t          next-new
-#  bind pager   \t          next-new
-   bind index   \t          next-unread
-   bind pager   \t          next-unread
-   bind index  ,\t      previous-unread
-   bind pager  ,\t      previous-unread
-
-## Bindings for Index {{{
-# 980626
+################ Jumpings
+## Bindings for Index
 # Repositioning - Moving the current mail around the screen:
 # (use bindings a la Vim for moving the current line)
 #   bind index zt current-top
 #   bind index zz current-middle
 #   bind index zb current-bottom
-
-# index bindings - nn (newsreader) style
-#   bind index <        previous-page
-#   bind index >            next-page
-#  bind index ^       first-message     # error with mutt-0.89.1
-#  bind index $        last-message     # error with mutt-0.89.1
-
-# index bindings - elm (mailer) style
-#   bind index +            next-page
-#   bind index -        previous-page
-
-#   bind index <pagedown>     next-page
-#   bind index <pageup>   previous-page
-#  bind index <home>     first-message    # error with mutt-0.89.1
-#  bind index <end>       last-message    # error with mutt-0.89.1
-
-#  bind index \Cg        group-reply # \Cg --> "group-reply"
-#  bind index g        first-message #  g  was "group-reply"
-#  bind index G         last-message    # error with mutt-0.89.1
-
-#   bind index \Cb      previous-page
-#   bind index \Cf          next-page # \Cf was 'f'orget-passphrase
-#  bind index \Cv  forget-passphrase # \Cv --> 'f'orget-passphrase
-#                  forget-passphrase is not known any more?  Hmm..
-#   macro index <esc>\Cf forget-passphrase
-
-
+#
 # Macros that jump to next/previous mail with a given flag.
 # Here I use vi-like commands to jump forward and backward,
 # ie ',' for forward and ';' for backward.
 #  macro index ,f  /~F\n
 #  macro index ;f  <esc>?~F\n
-## Bindings for Index }}}
-
-## Bindings for pager {{{
-## scrolling: {{{
-   bind pager \Cu half-up
-   bind pager \Cd half-down
-
-   bind pager \Cm next-line
-   bind pager \Ce next-line
-   bind pager \Cy previous-line
-   bind pager +   next-line
-   bind pager -   previous-line
-
-   bind pager ' ' next-page
-   bind pager \Cf next-page
-   bind pager \Cn next-page
-
-   bind pager -   previous-page
-   bind pager \Cb previous-page       # was "browse-url"
-#  bind pager  ,B browse-url          # compensate for \Cb
-   bind pager \Cn half-down
-   bind pager \Cp half-up
-
-# setting the current line to the top or bottom line:
-   #bind pager t   top
-   bind pager ^   top
-   bind pager g    top
-
-   bind pager G   bottom
-   bind pager $   bottom
-
-# bind pager backspace   previous-line
-# bind pager delete      previous-line       # yields error!
-   bind pager k    previous-line
-   bind pager j    next-line
-# }}}
-## jumping to other messages: {{{
-   bind pager n   next-undeleted
-## bind pager N
-   bind pager p   previous-undeleted
-
-   bind pager ,j   next-undeleted
-   bind pager ,k   previous-undeleted
-   bind pager b    previous-page
-   bind pager f    next-page
-# }}}
-## Bindings for pager }}}
-## Jumpings }}}
-
-
+#
 ## ======================
 ## Bindings for index {{{
 ## ======================
-
-# 980626
-# Show the version number with 'V':
-  bind index V   show-version
-  bind pager V   show-version
-#  macro index V "!mutt -v | less"
-
-# index bindings - nn (newsreader) style
-   bind index \Cx      sync-mailbox  # \Cx ->"sync-mailbox"
-
-#  not necesary any more:
-#   macro index "+so" ":source "
+#
 #  Quickly change to folders:
-#   macro index ",cr"  "c=received"                  "Change to the =received folder"
-#   macro index ",cv"  "cimap://localhost/vim/"      "Change to the vim folder"
-#   macro index ",cq"  "cimap://localhost/sasquad/"  "Change to the sasquad folder"
-#   macro index ",cs"  "cimap://localhost/scape/"    "Change to the scape folder"
-#   macro index ",cp"  "cimap://localhost/pcgen/"    "Change to the pcgen folder"
-#   macro index ",cf"  "cimap://localhost/frjv/"     "Change to the frjv folder"
-
-# calling the webbrowser through use of urlview:
-# macro index \cb |urlview\n    # simulate the old browse-url function
-   macro index ,\Cb |urlview\n "Extract a URL, and queue for later download"
-   macro pager ,\Cb |urlview\n "Extract a URL, and queue for later download"
-# the config file of urlview is ~/.urlview and has the line:
-# REGEXP ((((ht|f)tp)|mailto):(//)?[^ >"\t]*|www\.[-a-z0-9.]+)[^ .,;\t>">]
-# COMMAND=screen lynx "%s"
-
-
-#macro index \# /bug^M  # search for bugs
-#macro index "\""        ":set realname=\"real hairy macro\"^M:set ?realname^M" # and a comment to boot!
-#macro index f1 :woohoo!
-
+#   macro index ",cr" "c=received"                 "Change to the =received folder"
+#   macro index ",cv" "cimap://localhost/vim/"     "Change to the vim folder"
+#   macro index ",cq" "cimap://localhost/sasquad/" "Change to the sasquad folder"
+#   macro index ",cs" "cimap://localhost/scape/"   "Change to the scape folder"
+#   macro index ",cp" "cimap://localhost/pcgen/"   "Change to the pcgen folder"
+#   macro index ",cf" "cimap://localhost/frjv/"    "Change to the frjv folder"
+#
 # Macro:
 # Stian Sletner <sletner@powertech.no> wished that
 # when you view a message with all headers that
@@ -213,76 +168,5 @@
 # and show the current status of "forward_weed" for checking.
 # A "forward" should now include *all* headers.  :-)
 #  macro index ,h ":unset forward_weed\rh:set ?fcc_attach\r"
-# Homework:  Reset the value "forward_weed" on exit from the pager.  ;-)
+# Homework:  Reset the value "forward_weed" on exit from the pager.
 # }}}
-## ===========================
-## Bindings a la PINE {{{
-## ===========================
-## See file "Pine.rc" of the distribution for further bindings!
-
-# Make 'I' go to the "Index"
-# ie to the mailbox:
-#  macro index I "c!\n"
-#  macro pager I "c!\n"
-# }}}
-## ===========================
-## Bindings for pager {{{
-## ===========================
-
-# ROT13 - rotate alphabet by 13 characters
-   macro pager D |rot13
-
-  # rot13 by Sébastien Michel ?
-  macro pager X "<enter-command>\
-set display_filter = \"tr a-zA-Z n-za-mN-ZA-M\"<enter>\
-<exit><display-message>\
-" "rot13"
-
-  macro pager <esc>X "\
-<enter-command>unset display_filter<enter>\
-<exit><display-message>\
-" "re-display message"
-
-# 991213:
-#  Z = ZOOM
-  macro pager z   ":set pager_index_lines=10\n"
-  macro pager Z   ":set pager_index_lines=0\n"
-
-# searching
-   bind pager /   search
-
-# dealing with messages, such as printing and replying:
-   bind pager P   print-message
-
-   bind pager R   list-reply
-#  bind pager L   list-reply  # clashes with "bottom-page"
-
-## Adding a prefix to index mail commands:
-## I do this so I can use the letters for pager commands.
-## This prevents accindental invocation of the editor.
-## I do not use ESC as the prefix key as there needs to be
-## a pause between ESC and the following key - annoying.
-## I once used the backslash key - but \n, \r, and \t
-## are now used for newline, return, and tab.  *sigh*
-   bind pager ,b   bounce-message
-   bind pager ,f   forward-message
-   bind pager ,g   group-reply
-   bind pager ,m   mail
-   bind pager ,L   list-reply
-   bind pager ,n   reply
-   bind pager ,r   reply
-   bind pager ,a   reply               # 'a' is for "answer"
-
-   bind pager m    noop
-   bind pager L    noop
-   bind pager r    noop
-
-   bind pager :  enter-command
-   bind pager t  tag-message
-# }}}
-## ===========================
-
-# Idea from Sébastien Michel -> toggle and display
-# macro index h ':toggle edit_headers<enter>:set ?edit_headers<enter>'
-# macro pager h ':toggle edit_headers<enter>:set ?edit_headers<enter>'
-

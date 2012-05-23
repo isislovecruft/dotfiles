@@ -58,10 +58,3 @@ def get_password(filename, hostname):
     rhn, u, pw = parse_credentials(filename, hostname)
     return pw
 
-'''
-if __name__ == "__main__":
-    host, user, passwd = get_credentials(".offlineimap.patterns", "patterns")
-    print host
-    print user
-    print passwd
-'''

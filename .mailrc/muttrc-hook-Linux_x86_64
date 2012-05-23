@@ -2,15 +2,15 @@
 ## Account hooks for local IMAP mailboxes
 ###############################################################################
 ## Mailboxes
-mailboxes /var/mail/isis
-#mailboxes imap://localhost/Mail
+#mailboxes /var/mail/isis
+##mailboxes imap://localhost/Mail
 
 ## Sendmail
-set sendmail = '/usr/sbin/sendmail -oem -oi' # usual definition for Postfix
+#set sendmail = '/usr/sbin/sendmail -oem -oi' # usual definition for Postfix
 
 ## Editor -- editor to use when composing messages
-set editor="emacs -nw"
+#set editor="emacs -nw"
 
 #set spoolfile=imap://localhost/Mail
-set spoolfile="$HOME/.maildir/isis@localhost/spool"
-set folder="$HOME/.maildir/isis@localhost"
+#set spoolfile="$HOME/.maildir/isis@localhost/spool"
+#set folder="$HOME/.maildir/isis@localhost"

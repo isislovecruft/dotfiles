@@ -1,55 +1,18 @@
-# Offlineimap sample configuration file
-
-# This file documents *all* possible options and can be quite scary.
-# Looking for a quick start?  Take a look at offlineimap.conf.minimal.
-# More details can be found in the included user documention, which is
-# also available at: http://docs.offlineimap.org/en/latest/
-
-# NOTE: Settings generally support python interpolation. This means
-# values can contain python format strings which refer to other values
-# in the same section, or values in a special DEFAULT section. This
-# allows you for example to use common settings for multiple accounts:
-#
-# [Repository Gmail1]
-# trashfolder: %(gmailtrashfolder)s
-#
-# [Repository Gmail2]
-# trashfolder: %(gmailtrashfolder)s
-#
-# [DEFAULT]
-# gmailtrashfolder = [Google Mail]/Papierkorb
-#
-# would set the trashfolder setting for your German gmail accounts.
-
-
-##################################################
+# NOTE:
+# Call with "$ offlineimap -f $HOME/.mailrc/offlineimaprc
+####################################################################
 # General definitions
-##################################################
+####################################################################
 
 [general]
 
-# This specifies where offlineimap is to store its metadata.
-# This directory will be created if it does not already exist.
-
+# Where to store metadata:
 metadata = ~/.offlineimap
 
-# This variable specifies which accounts are defined.  Separate them
-# with commas.  Account names should be alphanumeric only.
-# You will need to specify one section per account below.  You may
-# not use "general" for an account name.
-
+# List of accounts:
 accounts = isis@patternsinthevoid.net
 
-# Offlineimap can synchronize more than one account at a time.  If you
-# want to enable this feature, set the below value to something
-# greater than 1.  To force it to synchronize only one account at a
-# time, set it to 1.
-#
-# Note: if you are using autorefresh and have more than one account,
-# you must set this number to be >= to the number of accounts you have;
-# since any given sync run never "finishes" due to a timer, you will never
-# sync your additional accounts if this is 1.
-
+# Max accounts to sync simultaneously:
 maxsyncaccounts = 1
 
 # You can specify one or more user interface modules for OfflineIMAP
@@ -67,7 +30,7 @@ maxsyncaccounts = 1
 #
 # You can override this with a command-line option -u.
 
-ui = ttyui
+ui = basic
 
 # If you try to synchronize messages to a folder which the IMAP server
 # considers read-only, OfflineIMAP will generate a warning.  If you want
@@ -80,38 +43,27 @@ ui = ttyui
 
 #ignore-readonly = no
 
-########## Advanced settings
+#---------------------
+# Advanced settings
+#---------------------
 
 # You can give a Python source filename here and all config file
 # python snippets will be evaluated in the context of that file.
-# This allows you to e.g. define helper functions in the Python
-# source file and call them from this config file.  You can find
-# an example of this in the manual.
-#
-pythonfile = ~/.mailrc/offlineimap.py
 
+pythonfile = ~/.mailrc/offlineimap.py
 
 # By default, OfflineIMAP will not exit due to a network error until
 # the operating system returns an error code.  Operating systems can sometimes
 # take forever to notice this.  Here you can activate a timeout on the
-# socket.  This timeout applies to individual socket reads and writes,
-# not to an overall sync operation.  You could perfectly well have a 30s
-# timeout here and your sync still take minutes.
-#
-# Values in the 30-120 second range are reasonable.
-#
-# The default is to have no timeout beyond the OS.  Times are given in seconds.
-#
-socktimeout = 120
+# socket. Values in the 30-120 second range are reasonable.
+
+socktimeout = 30
 
 # By default, OfflineIMAP will use fsync() to force data out to disk at
 # opportune times to ensure consistency.  This can, however, reduce
 # performance.  Users where /home is on SSD (Flash) may also wish to reduce
 # write cycles.  Therefore, you can disable OfflineIMAP's use of fsync().
-# Doing so will come at the expense of greater risk of message duplication
-# in the event of a system crash or power loss.  Default is fsync = true.
-# Set fsync = false ot disable fsync.
-#
+
 fsync = false
 
 ##################################################
@@ -132,7 +84,6 @@ fsync = false
 enabled = yes
 filename = ~/.mailrc/muttrc-offlineimap-mailboxes
 header = "mailboxes "
-#peritem = "+%(accountname)s/%(foldername)s"
 peritem = "$HOME/.maildir/%(accountname)s/%(foldername)s"
 sep = " "
 footer = "\n"
@@ -170,7 +121,7 @@ remoterepository = Remote
 # frequently to do that (in minutes) here.  You can also specify
 # fractional minutes (ie, 3.25).
 
-#autorefresh = 15
+autorefresh = 10
 
 # OfflineImap can replace a number of full updates by quick
 # synchronizations.  It only synchronizes a folder if 1) a Maildir
@@ -184,7 +135,7 @@ remoterepository = Remote
 # another full synchronization (requires autorefresh).  Updates are
 # always performed after <autorefresh> minutes, be they quick or full.
 
-#quick = 10
+quick = 13
 
 # You can specify a pre and post sync hook to execute a external command.
 # In this case a call to imapfilter to filter mail before the sync process
@@ -324,6 +275,7 @@ ssl = yes
 cert_fingerprint = F3:2C:82:0C:93:17:C1:E3:E2:44:EF:C0:00:20:8D:7C:A1:98:8F:99
 
 # Specify the port.  If not specified, use a default port.
+
 remoteport = 993
 
 ########## Advanced settings
@@ -363,7 +315,7 @@ remoteport = 993
 # cases, it may slow things down.  The safe answer is 1.  You should
 # probably never set it to a value more than 5.
 
-maxconnections = 3
+maxconnections = 2
 
 # OfflineIMAP normally closes IMAP server connections between refreshes if
 # the global option autorefresh is specified.  If you wish it to keep the
@@ -410,7 +362,11 @@ maxconnections = 3
 # filtered out by folderfilter below.  Failure to follow this rule
 # will result in undefined behavior
 #
-nametrans = lambda foldername: re.sub('^INBOX\.', '.', foldername)
+
+#nametrans = lambda foldername: re.sub('^INBOX\.', '.', foldername)
+#nametrans = lambda foldername: re.sub('^INBOX$', '
+
+nametrans = lambda foldername: re.sub('^INBOX', '', foldername)
 
 # Using Courier remotely and want to duplicate its mailbox naming
 # locally?  Try this:
@@ -449,7 +405,14 @@ nametrans = lambda foldername: re.sub('^INBOX\.', '.', foldername)
 
 #folderfilter = lambda foldername: foldername not in ['.', '..', 'INBOX.', 'INBOX']
 
+## This one works great:
 folderfilter = lambda foldername: foldername not in ['.', '..']
+
+## This one blocks folders which include those words, but it also 
+## makes Mutt not see the folders because it removes these mailboxes from 
+## .mailrc/muttrc-offlineimap-mailboxes:
+#folderfilter = lambda foldername: not re.search('(Receipts|School|Activism|Friends|GroupsAndLists|^.$|^..$)', foldername)
+
 
 #folderfilter = lambda foldername: not re.search('(^\.+$)', foldername)
 

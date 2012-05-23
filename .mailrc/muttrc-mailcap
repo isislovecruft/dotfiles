@@ -1,7 +1,9 @@
+# you should also do "# apt-get install mailcap"
+
 # text/html;            $HOME/bin/winspawn .html %s
 # text/html;            sed 's/<[^>]*>//g\; s/&nbsp\;/ /g' %s ; copiousoutput
 
-application/pgp-keys; pgp -f < %s ; copiousoutput
+application/pgp-keys; gpg --import < %s ; copiousoutput
 application/x-gunzip; gunzip < %s ; copiousoutput
 application/x-gzip;   gunzip < %s ; copiousoutput
 application/x-tar-gz; tar -tzvf < %s ; copiousoutput
@@ -9,6 +11,14 @@ application/x-tar-gz; tar -tzvf < %s ; copiousoutput
 image/*;                /usr/lib/iceweasel/firefox-bin --new-tab %s
 #text/html;              /usr/lib/iceweasel/firefox-bin --new-tab %s; needsterminal; description=HTML Text; nametemplate=%s.html
 text/html;              lynx -dump %s; copiousoutput; description=HTML Text; nametemplate=%s.html
-application/pdf;        okular %s
-application/postscript; okular %s
-application/rtf;        soffice -o %s
+
+## To use visual editors, use this:
+#application/pdf;        okular %s
+#application/postscript; okular %s
+#application/rtf;        soffice -o %s
+
+## Yo, I can read raw pdf's just fine, and I know way to much about PDF 
+## exploits to use an actual pdfreader.
+application/pdf;        less
+application/postscript; less
+application/rtf         less

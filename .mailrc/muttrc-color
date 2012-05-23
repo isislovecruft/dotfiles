@@ -1,23 +1,23 @@
-############################################################################################
+###############################################################################
 #   Color
 #   Tuned for transparent black background
-############################################################################################
+###############################################################################
 
 color normal            cyan            black
-color hdrdefault        red             black
+color hdrdefault        brightgreen     black
 color signature         blue            black
-color indicator         brightcyan      black
-color error             red             black
+color indicator         white           black
+color error             brightyellow    black
 color status            brightblue      black
-color tree              green           black   # the thread tree in the index menu
-color tilde             green           black
+color tree              cyan            black   # the thread tree in the index menu
+color tilde             cyan            black
 color message           brightcyan      black
 color markers           cyan            black
 color attachment        brightmagenta   black
-color search            yellow          black   # how to hilite searches in the pager
-color quoted            brightcyan      black   # quoted text
-color quoted1           brightmagenta   black
-color quoted2           brightred       black
+color search            black           brightcyan   # how to hilite searches in the pager
+color quoted            yellow          black   # quoted text
+color quoted1           green           black
+color quoted2           yellow          black
 color quoted3           green           black
 color quoted4           cyan            black
 color quoted5           blue            black
@@ -26,12 +26,15 @@ color quoted7           red             black
 color quoted8           green           black
 color quoted9           cyan            black
 color underline         brightgreen     black
-color index             green           black ~F
-color header            red             black ^(From|Subject):
+color index             green           black "~F"
+color index             brightcyan      black "~N"
+color index             yellow          black "~D"
+color header            brightyellow    black "^(From|Subject):"
+color sidebar_new       brightcyan      black
 
 # point out url's
-color body              cyan           black "((ftp|http|https)://|(file|news):|www\\.)[-a-z0-9_.:]*[a-z0-9](/[^][{} \t\n\r\"<>()]*[^][{} \t\n\r\"<>().,:!])?/?"
-color body              cyan            black [-a-z_0-9.]+@[-a-z_0-9.]+    # e-mail addresses
+color body              brightyellow    black "((ftp|http|https)://|(file|news):|www\\.)[-a-z0-9_.:]*[a-z0-9](/[^][{} \t\n\r\"<>()]*[^][{} \t\n\r\"<>().,:!])?/?"
+color body              brightyellow    black "[-a-z_0-9.]+@[-a-z_0-9.]+"    # e-mail addresses
 
 # smilies and the like
 color body brightgreen black "<[Gg]>"
@@ -65,27 +68,3 @@ mono body               underline      "[-a-z_0-9.]+@[-a-z_0-9.]+"
 mono body               bold           "(^| )\\*[-a-z0-9äöüß*]+\\*[,.?]?[ \n]"
 mono body               underline      "(^| )_[-a-z0-9äöüß_]+_[,.?]?[ \n]"
 
-#############################################################################################
-# Color definitions (black background)
-#############################################################################################
-
-#color hdrdefault red default
-#color quoted brightblue default
-#color signature red default
-#color indicator brightyellow red
-#color error brightred default
-#color status yellow blue
-#color tree magenta default     # the thread tree in the index menu
-#color tilde magenta default
-#color message brightcyan default
-#color markers brightcyan default
-#color attachment brightmagenta default
-#color search default green     # how to hilite search patterns in the pager
-
-#color header brightred default ^(From|Subject):
-#color body magenta default "(ftp|http)://[^ ]+"        # point out URLs
-#color body magenta default [-a-z_0-9.]+@[-a-z_0-9.]+   # e-mail addresses
-#color underline brightgreen default
-
-# attributes when using a mono terminal
-#mono quoted bold

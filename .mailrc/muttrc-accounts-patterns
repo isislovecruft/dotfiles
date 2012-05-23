@@ -1,10 +1,39 @@
-##################################################################
+####################################################################
 ## Account hooks for patternsinthevoid.net
-##################################################################
-
+####################################################################
+##
 ## Mailboxes
-mailboxes "$HOME/.maildir/isis@patternsinthevoid.net"
+## ---------
+## These come directly from offlineimap, and are put into this file:
+source $HOME/.mailrc/muttrc-offlineimap-mailboxes
 
-set spoolfile="$HOME/.maildir/isis@patternsinthevoid.net/"
+## We don't want anything to have a Message-ID of "user@localhost":
+set hostname="patternsinthevoid.net"
 
+## Manually set envelope address:
+set envelope_from_address=""
+
+## Main folder which '+' and '=' will expand to when specifying
+## mailboxes (i.e. the folder '/me@mail.net/.listservs' becomes 
+## '+.listservs':
 set folder="$HOME/.maildir/isis@patternsinthevoid.net/"
+
+## Where to store read messages:
+## Normally this applies to moving messages out of a spoolfile, but
+## just in case we'll set it anyway.
+set mbox="$HOME/.maildir/isis@patternsinthevoid.net/"
+
+## Where to store postponed messages:
+set postponed="$HOME/.maildir/isis@patternsinthevoid.net/.Drafts"
+
+## Where to store sent messages:
+set record="$HOME/.maildir/isis@patternsinthevoid.net/.Sent"
+
+## Where to store temp files:
+set tmpdir="$HOME/.maildir/isis@patternsinthevoid.net/tmp"
+
+## We don't have a spoolfile because we're using maildir!
+#set spoolfile="$HOME/.maildir/isis@patternsinthevoid.net/"
+
+## Use my folder and messages settings for this account:
+source $HOME/.mailrc/muttrc-accounts-patterns-filters
