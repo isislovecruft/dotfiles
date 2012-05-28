@@ -2,10 +2,12 @@
 #  .muttrc
 #
 #  @author Isis Lovecruft, 0x2cdb8b35
-#  @version 0.0.2
+#  @version 0.0.3
 #__________________________________________________________________________
 # 
 #  Changelog:
+#  v0.0.3: *Mairix for multiple maildir searches.
+#
 #  v0.0.2: *Now uses OfflineIMAP called with "$ usewithtor offlineimap"
 #           instead of fetchmail with a homebrewed socat socks4a proxy.
 #
@@ -21,20 +23,12 @@ source "/etc/Muttrc"
 #  Identities
 ###########################################################################
 
-## Set the email address you want as your default 'from' address
-set from="Isis <isis@patternsinthevoid.net>"
-
-## Add the correct name, even when replying to messages addressed at
-## "patternsinthevoid.net" only.  
-set realname="Isis Agora Lovecruft"
-
-## :my_hdr will be used to overridde the default settings. e.g.:
-#my_hdr From: Isis <isis@torproject.org>
-my_hdr From: Isis <isis@patternsinthevoid.net>
+## Identity settings for individual accounts are now stored in their 
+## respective files. See $HOME/.mailrc/muttrc-accounts-<account_name>.
 
 ## Signature
 #set signature="~/.signature"   # file which contains my signature
-set sig_dashes=no               # A signature must always start with a "-- "
+set sig_dashes=no               # Signatures shouldn't start with a "-- "
 set signature="echo '<(A)3'; echo 'isis'|"
 
 ## The definition of alternate identities depends on Mutt's version
@@ -46,41 +40,38 @@ source $HOME/.mailrc/muttrc-hook-v`$HOME/.mailrc/muttrc-chk-ver.sh 1.5.6`
 ## the real smtp server not the local one (ie, not Hamster).
 set envelope_from=yes
 
-## Use my address as it appears in the message I am replying to
-set reverse_name
-
 ###########################################################################
 ## Account hooks
 ###########################################################################
-# 1- Define the global hook that unsets variables when specialized hooks
+# 1) Define the global hook that unsets variables when specialized hooks
 #    do not match
-# 2- Define the specialized hooks with:
-#  * hook that does not display anything and is self-sufficient
-#   (however, the password appear in the .muttrc)
-#      account-hook imap://imap.domain/ 'set imap_user="login" ; set imap_pass="passwd"'
+# 2) Define the specialized hooks with:
+#
+#    * Hook that does not display anything and is self-sufficient (however,
+#      the password appears in the .muttrc):
+#
+#      account-hook imap://imap.domain/ 'set imap_user="login" ; \ 
+#          set imap_pass="passwd"'
 #      mailbox imap://imap.domain/
-#      mailbox imap://imap.domain/INBOX/folder  (with free.fr)
-#      mailbox imap://imap.domain/folder/       (with Hamster)
-#  * non-hook that does not display anything and requires the user to enter
-#    the password
+#
+#    * Non-hook that does not display anything, requires the user to enter
+#      the password:
 #      mailbox imap://login@imap.domain/
-#      mailbox imap://login@imap.domain/INBOX/folder  (with free.fr)
-#      mailbox imap://login@imap.domain/folder/       (with Hamster)
-#  * non-hook that does display the password in mutt, and leave it in
-#    clear in the .muttrc
-#    the password
-#      mailbox imap://login:passwd@imap.domain/INBOX/folder  (with free.fr)
-#      mailbox imap://login:passwd@imap.domain/folder/       (with Hamster)
+#
+#    * Non-hook that does display the password in mutt, but leaves it in
+#      clear in the .muttrc:
+#      mailbox imap://login:passwd@imap.domain/
 #
 # Same thing with pop3 accounts.
 ###########################################################################
 
 account-hook . 'unset imap_user ; unset imap_pass ; unset tunnel'
 
-# Distant imap mailbox, synced locally with offlineimap
+## Remote IMAP, synced locally with offlineimap:
 source $HOME/.mailrc/muttrc-accounts-patterns
+#source $HOME/.mailrc/muttrc-accounts-thronedomelinescobra
 
-# Local mailboxes + other system dependent settings
+## Local mailboxes + other system dependent settings
 #source $HOME/.mailrc/muttrc-hook-`uname -s`_`uname -m`
 
 ##############
@@ -101,151 +92,236 @@ source $HOME/.mailrc/muttrc-accounts-patterns
 
 set abort_nosubject=no                  # allow entry of messages with
                                         # no subject
+
 set abort_unmodified=yes                # automatically abort empty replies
+
 set allow_8bit                          # never do Q-P encoding on legal 
                                         # 8-bit chars
+
 set allow_ansi=no                       # no ANSI escape chars allowed!
+
 unset arrow_cursor                      # use -> instead of hiliting the 
                                         # whole line
-set ascii_chars=no                         # use ASCII instead of ACS chars 
-                                        # for threads
+
+set ascii_chars=no                      # don't use ASCII instead of ACS 
+                                        # chars for threads
+
 #set askbcc                             # ask me everytime if I want to bcc
+
 #set askcc                              # ask me everytime if I want to cc
-set attribution="On %d, thus spake %n:"      # how to attribute replies
-unset autoedit                          # go to the editor right away
+
+set attribution="On %d, thus spake %n:" # how to attribute replies
+
+unset autoedit                          # go to $EDITOR right away
+
 set auto_tag                            # always operate on tagged messages
+
 set beep=no                             # don't beep on errors
+
 set beep_new=yes                        # beep on new messages
+
 set charset="utf-8"                     # character set for your terminal
+
 set send_charset="utf-8"
+
 set noconfirmappend                     # don't ask to append to mailboxes
+
 set confirmcreate                       # prompt when creating new files
+
 set copy=yes                            # always save a copy of outgoing 
                                         # messages
-set date_format=%a\ %d\ %b\ %Y\ at\ %R      # 24-hour clock
+
+set date_format=%a\ %d\ %b\ %Y\ at\ %R  # Sun 1 Jan 2012 at 2115
+
 set delete=yes                          # purge deleted messages without 
                                         # asking
+
 set edit_headers                        # let me edit the message headers 
                                         # when composing
+
 set editor="emacs -nw"                  # editor to use
+
 set encode_from=yes                     # Q-P out lines beginning with "From "
+
 set fast_reply                          # skip initial prompts when replying
+
 set fcc_attach                          # keep attachments in copies of 
-                                        # sent messages?
+                                        # sent messages
+
 #set force_name                         # fcc by recipient, create if 
                                         # mailbox doesn't exist
-set followup_to
-set folder_format="%2C %t %N %-8.8u %8s %D %f"
+
+set followup_to=yes                     # Don't let replies go to me when I
+                                        # respond to a list
+
+set folder_format="  %2C| %f %* | Tagged: %t New: %N Last Modified: %D    "
+
 set forward_decode                      # weed and MIME decode forwarded 
                                         # messages
+
 set forw_format="Fwd: %s"               # subject when forwarding messages
+
 set forward_quote                       # quote header & body of forwarded
                                         # messages
-#set hdr_format="%4C %Z %{%m/%d} [%2N] %-15.15F (%4c) %s"
-#set hdr_format="%4C %Z %{%m/%d} %-15.15F %4c  %s"      
-                                        # format of the index
+
 set hdrs=yes                            # include `my_hdr' lines
-#set header                             # include message header when 
-                                        # replying
+
+set header=no                           # don't include original message 
+                                        # headers when replying
+
 set help                                # show the help lines
+
+set hide_thread_subject=no              # show me the subjects, even if
+                                        # they are equivalent to their
+                                        # parents
+
 #set history=20                         # number of lines of history to 
                                         # remember
 set honor_followup_to
+
 set include=yes                         # always include messages when 
                                         # replying
+
 set indent_string="> "                  # how to quote replied text
+
 #set index_format="%4C %Z %[!%y%m%d] %-17.17F (%3l) %s"
-set index_format="%4C [%Z] %s %* [%D] %-26.26L" 
-set locale="en_GB@euro"                 # locale to use for printing time
+set index_format="%4C %2M [%Z] %s %* [%D] %-26.26F" 
+
+#set locale="en_GB@euro"                # locale to use for printing time
+
 set mark_old=no                         # don't mark messages as old
-#set mail_check=10                      # how often to poll for new mail
+
+set mail_check=5                        # how often to poll for new mail
                                         # (we're using offlineimap instead)
+
 set maildir_trash=no                    # messages will receice a maildir
                                         # trash flag instead of being 
                                         # unlinked
-set mask="^"                              # we want to see all the dirs
+
+set mask="^\.[a-zA-Z]"                   # we want to see all the dirs,
+                                        # except '.' '..' 'cur/' 'tmp/'
+                                        # and 'new/'
+
 set mbox_type=Maildir                   # this dir must have tmp/, cur/, 
                                         # and new/ subdirs
+
 set menu_scroll                         # no implicit next-page/prev-page
-#unset metoo                            # remove my address when replying
+
+### testing metoo to see if it helps me see replies I've made to multiple people:
+set metoo=yes                           # don't remove my address when replying
+
 #set mime_forward=ask-yes               # use message/rfc822 type to 
                                         # forward messages
+
 set move=no                             # do not move read mails from 
                                         # mailbox to $mbox
+
 #set pager=less                         # some people prefer an external 
                                         # pager
+
 set pager_context=1                     # no. of lines of context to give 
                                         # when scrolling
+
 #set pager_format="-%S- %-20.20f %s"    # format of the pager status bar
 set pager_format="%S [%C/%T] %n (%l) %s"
+
 set pager_index_lines=0                 # how many index lines to show in 
                                         # the pager
+
 set pager_stop                          # don't move to the next message 
                                         # on next-page
+
 #set pgp_strict_enc                     # use Q-P encoding when needed for 
                                         # PGP
+
 #set post_indent_string='---end quoted text---'
+
 set print=ask-no                        # ask me if I really want to print
-set print_command=sprunge               # pastebin instead of printing 
+
+set print_command=$HOME/scripts/sprunge # pastebin instead of printing 
                                         # things (I like to save trees)
+
 set noprompt_after                      # don't ask me for a command after 
                                         # the external pager exits
+
 set quote_regexp="^ *[a-zA-Z]*[]>|}%:=-][]>|}:=-]*"        # catch quoted
+
 set read_inc=10                         # show progress when reading a 
                                         # mailbox
-set recall=ask-yes                      # prompt to recall postponed 
+
+set recall=ask-no                       # prompt to recall postponed 
                                         # messages
 set reply_to=ask-yes
+
 set reply_regexp="^((aw|antw.?|antwort|re([\[0-9\]+])*|r e|r?f|sv):[ \t]*)*"
+
 #set resolve                            # move to the next message when 
                                         # an action is performed
-set reverse_name                        # build the From: line from the
+
+set reverse_name=yes                    # build the From: line from the
                                         # received address
+
 set save_empty=yes                      # don't remove empty mailboxes
+
 set save_name=no                        # don't save outgoing messages by 
                                         # recipient, just put them in 
                                         # $record
-#set sendmail="/usr/sbin/sendmail -oi -oem"   # how to deliver mail
+
+#set sendmail="/usr/sbin/sendmail -oi -oem"   # this one is the postfix
+                                              # standard
 set sendmail="/usr/bin/msmtp"
-#set sendmail="sudo %?p?--passphrase-fd 0? socat -d -d -d -lu TCP4-LISTEN:2525,fork SOCKS4A:localhost:66.147.244.158:465,socksport=59050,socksuser=\"\" & /usr/bin/msmtp -a patternsinthevoid "
-#set sendmail="socat -d -d -d -lu -lf $HOME/.mailrc/socat-msmtp.log -L $HOME/.mailrc/socat-msmtp-lockfile TCP4-LISTEN:2525,fork SOCKS4A:localhost:66.147.244.158:465,socksport=59050,socksuser=\"\" & /usr/bin/msmtp -a patternsinthevoid & % socat"
-#set sendmail="socat -d -d -d -lu -lf $HOME/.mailrc/socat-msmtp.log -L $HOME/.mailrc/socat-msmtp-lockfile TCP4-LISTEN:2525,fork SOCKS4A:localhost:66.147.244.158:465,socksport=59050,socksuser=\"\" & /usr/bin/msmtp"
+
+#set sendmail="sudo %?p?--passphrase-fd 0? socat -d -d -d -lu -lf $HOME/.mailrc/socat-msmtp.log -L $HOME/.mailrc/socat-msmtp-lockfile TCP4-LISTEN:2525,fork SOCKS4A:localhost:66.147.244.158:465,socksport=59050,socksuser=\"\" & /usr/bin/msmtp -a default"
+
 set shell="/bin/bash"                   # program to use for shell escapes
+
 set sidebar_visible                     # show the account folders sidebar
+
 set sidebar_width=45                    # sidebar width
+
 set sidebar_delim="|"                   # use a pipe to delimit the sidebar
+
 set sort=threads                        # primary sorting method
+
 set sort_aux=reverse-date               # how to sort subthreads
-set sort_browser=reverse-date           # how to sort files in the dir 
+
+set sort_browser=alpha                  # how to sort files in the dir 
                                         # browser
+
 set status_format="-%r-Mutt: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?  %l]---(%s)-%>-(%P)---"
-#set status_format="%v: %f (%s) [%M/%m] [N=%n,*=%t,post=%p,new=%b]"
-#set status_format="Mutt --*-- <%f> [%M/%m] [N=%n,*=%t,post=%p,new=%b]"
-#set status_format=“-%r-Mutt: [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---"
+
 set status_on_top                       # status bar on top
+
 set strict_threads                      # set: use references: for 
                                         # threading only, ie do not thread 
                                         # by subject or in-reply-to
+
 set tilde                               # pad blank lines in the pager
+
 #set timeout=0                          # timeout for prompt in the index 
                                         # menu
+
 set to_chars=" +TCFL"                   # 1) Not addressed to me
                                         # 2) I am the only recipient of 
                                         #    the message
-                                        # 3) In the “To:” field, but not 
+                                        # 3) In the 'To:' field, but not 
                                         #    sole recipient  
-                                        # 4) In “Cc:” header field, but 
+                                        # 4) In 'Cc:' header field, but 
                                         #    not sole recipient
                                         # 5) Sent by me
                                         # 6) Message was sent to a 
                                         #    mailing-list
+
 set use_domain=yes                      # qualify local addresses 
                                         # with $hostname (which should be
                                         # set on a per-mailbox basis)
+
 #set visual=gvim                        # editor invoked by ~v in the 
                                         # builtin editor
+
 #set nowait_key                         # prompt when a pipe returns 
                                         # normal status
+
 #set write_inc=10                       # show progress while writing 
                                         # mailboxes
 
@@ -253,10 +329,7 @@ set use_domain=yes                      # qualify local addresses
 ## Mailboxes to watch for new mail
 ##       mailboxes <path1> [ <path2> ... ]
 ###########################################################################
-## see $HOME/.mailrc/muttrc-accounts-patterns
-## and $HOME/.mailrc/muttrc-hook-`uname -s`_`uname -m`
-
-source $HOME/.mailrc/muttrc-accounts-patterns
+## see $HOME/.mailrc/offlineimap-mailboxes
 
 ## The following is a helper for Entended Maildir Formatted directory 
 ## structures:
@@ -286,7 +359,6 @@ source $HOME/.mailrc/muttrc-accounts-patterns
 #################################################################################
 
 #unset use_from                         # Don't generate a From header
-#set hostname="patternsinthevoid.net"   # Message-ID
 set use_domain=yes
 set user_agent=no                       # Do not send user-agent header
 
@@ -325,7 +397,9 @@ unignore delivered-to
 
 #my_hdr X-Useless-Header: Look ma, it's a \# sign!         # real comment
 #my_hdr X-Operating-System: `uname -a`
-my_hdr X-GPG-Public-Key: 0x2cdb8b35
+
+my_hdr X-GPG-Public-Key-ID: 0x2CDB8B35
+my_hdr X-GPG-Public-Key-URL: www.patternsinthevoid.net/2CDB8B35.pub.asc
 
 ###########################################################################
 # Header order to appear when displaying a message
@@ -349,6 +423,8 @@ hdr_order Sender: From From: Subject: Date: Message-Id: User-Agent: \
 #save-hook aol\.com +spam
 #save-hook ^judge +diplomacy
 #save-hook * $HOME/.maildir/tmp/%T
+
+## see $HOME/.mailrc/muttrc-accounts-patterns-save-hooks
 
 ###########################################################################
 ## Multiple spool mailboxes
@@ -429,7 +505,7 @@ set alias_file=$HOME/.mailrc/aliases_file
 set reverse_alias                  # attempt to display the names I've
                                    # assigned to email addresses
 
-# Thanks to this, Mutt will ask alias to Abook when we hit «Q»
+# Thanks to this, Mutt will ask alias to Abook when we hit Q
 set query_command="abook --mutt-query '%s'"
 
 ###########################################################################

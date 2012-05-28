@@ -18,7 +18,7 @@
 
 ################INDEX           MESSAGE INDEX
 
-  macro index  S         "<save-message>=.Spam<Enter>" "Move to Spam"
+  macro index  S         "<save-message>=.spam<Enter>" "Move to Spam"
 
   bind index   r                reply
   bind index   L                list-reply
@@ -69,6 +69,9 @@
 ################PGP             PGP & PGP MENU
 ################POSTPONE        POSTPONED MESSAGE RECALL MENU
 ################GENERIC         GENERIC KEYMAP
+
+  macro generic  ,/ "<shell-escape>mairix " "search all mailboxes with mairix"
+
 ################EDITOR          LINE EDITOR
 
 #  The usual DEL vs BS problem:
@@ -107,7 +110,7 @@
   macro pager z   ":set pager_index_lines=10\n"        "Zoom out"
   macro pager Z   ":set pager_index_lines=0\n"         "Zoom in"
   macro pager c   "<change-folder>?<toggle-mailboxes>" "Open a different folder"
-  macro pager S   "<save-message>=.Spam<Enter>"        "Move to Spam"
+  macro pager S   "<save-message>=.spam<Enter>"        "Move to Spam"
   macro pager h ':toggle edit_headers<enter>:set ?edit_headers<enter>' "Edit headers"
   macro pager I "<change-folder>/\n"  "Go to Index"
 
