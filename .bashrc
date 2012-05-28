@@ -112,32 +112,6 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
-
-# TMUX
-if which tmux 2>&1 >/dev/null; then
-    # If no tmux session is started; start a new session:
-    if test -z ${TMUX}; then
-    # We actually need to attach to it, because tmux.conf starts
-    # session for us:
-	#tmux attach
-        # that didn't work; maybe we don't want to attach?
-        tmux attach
-    # Since this usually occurs just after boot, start the
-    # firewall while we're at it:
-    $HOME/scripts/firewall.client.sh
-    fi
-    # When quitting tmux, try to attach:
-    while test -z ${TMUX}; do
-	tmux attach || break
-    done
-fi
-
 # Extra user defined alaises:
 alias e='emacs -nw'
 alias ec='emacsclient -t'
@@ -149,10 +123,11 @@ alias acs='apt-cache search'
 alias dev='cd /home/isis/dev'
 alias back='cd $OLDPWD'
 alias arm='sudo -u debian-tor arm'
-alias sprunge="curl --socks4a 127.0.0.1:59050 -A 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0' -F 'sprunge=<-' http://sprunge.us"
+## Moved to scripts/ so muttrc can call it:
+#alias sprunge="curl --socks4a 127.0.0.1:59050 -A 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0' -F 'sprunge=<-' http://sprunge.us"
 alias 30='dmesg | tail -n 30 | ccze -A'
 alias 300='dmesg | tail -n 300 | ccze -A'
-alias check='ping -c 2 google.com'
+alias check='ping -c 3 google.com'
 alias fuck='sudo killall'
 alias rms='rm ./*~'
 alias rmp='rm ./\#*#'
@@ -160,6 +135,8 @@ alias rme='rm ./*~ && rm ./\#*#'
 alias rmc='rm ./*.pyc'
 alias tagsc='find . -name "*.[ch]" | xargs etags'
 alias tagsp='find . -type f -name "*.py" | xargs etags'
+alias removepound="sed -e 's/#.*//;/^$/d'"
+alias removeslash="cpp -fpreprocessed"
 alias boilerpy="boilerplate.sh $HOME/scripts/boilerplate-python $1 "
 alias boilersh="boilerplate.sh $HOME/scripts/boilerplate-bash $1 "
 alias gitdate='. gitdate.sh'
@@ -173,41 +150,69 @@ alias pytebeat="aoss $HOME/dev/pytebeat/pytebeat.py"
 alias keysign="keysign.sh "
 alias fwup="firewall.client.sh"
 alias fwdown="sudo iptables -F; sudo iptables -X; sudo iptables -A INPUT -j ACCEPT; sudo iptables -A FORWARD -j ACCEPT; sudo iptables -A OUTPUT -j ACCEPT"
-alias offlineimap="offlineimap -c $HOME/.mailrc/offlineimaprc"
+alias offlineimap="offlineimap -c /home/isis/.mailrc/offlineimaprc"
 alias torofflineimap="usewithtor offlineimap -c $HOME/.mailrc/offlineimaprc-tor"
 alias mutt="mutt-patched"
+alias mairix="mairix -f $HOME/.mailrc/mairixrc"
 alias N='emacs -nw $HOME/NOTES.gpg'
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+## TMUX
+if which tmux 2>&1 >/dev/null; then
+    ## If no tmux session is started; start a new session:
+    if test -z ${TMUX}; then
+        ## We actually need to attach to it, because tmux.conf starts
+        ## the session for us:
+	    #tmux attach
+        ## that didn't work...
+        ## now .tmux.conf.setup is bound to to a key, so do:
+        tmux
+        ## Since this usually occurs just after boot, start the
+        ## firewall while we're at it:
+        $HOME/scripts/firewall.client.sh
+    fi
+    ## When quitting tmux, try to attach:
+    while test -z ${TMUX}; do
+	    tmux attach || break
+    done
+fi
 
 ## Environment variables:
 #export TZ=UTC                             # Blue telephone box
-#export EDITOR=/usr/bin/emacs
+#export EDITOR=/usr/bin/emacs              # Uses X :(
 #export VISUAL=/usr/bin/emacs
 export BROWSER=/usr/bin/iceweasel
 
-# Qu'est-que fuck is with insserv, anyway?
-#$HOME/scripts/firewall.client.sh
-
-# Let's make pretty things!
+## Let's make pretty things!
 $HOME/scripts/bash_pretty_login.py
 
-# Export path for android NDK
+## Export path for android NDK
 export NDKROOT=$HOME/dev/android/android-ndk-r7
 
-# Export paths for common toolchains for android NDK
-# Leave these commented out unless you're specifically cross-compiling for ArmV7
+## Export paths for common toolchains for android NDK
+## Leave these commented out unless you're specifically cross-compiling for ArmV7
 #
 #export AR=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ar
 #export LD=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ld
 #export CC=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-gcc
 
-# Add export path for Android SDK platform-tools and tools:
+## Add export path for Android SDK platform-tools and tools:
 export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/tools:$HOME/dev/android/android-sdk-linux/platform-tools
 
-# Export path to hyde.py
+## Export path to hyde.py
 export PATH=${PATH}:$HOME/dev/web/hyde/
 
-# Export path to homebrewed scripts directory
+## Export path to homebrewed scripts directory
 export PATH=$PATH:$HOME/scripts
 
-# Export path to git-hg
+## Export path to git-hg
 export PATH=$PATH:$HOME/dev/git-hg/bin
+
+## Export path for Go
+export PATH=$PATH:/usr/local/go/bin
