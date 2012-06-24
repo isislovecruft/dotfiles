@@ -29,7 +29,8 @@ source "/etc/Muttrc"
 ## Signature
 #set signature="~/.signature"   # file which contains my signature
 set sig_dashes=no               # Signatures shouldn't start with a "-- "
-set signature="echo '<(A)3'; echo 'isis'|"
+set sig_on_top=yes              # Put my signature before quoted text
+set signature="echo ''; echo ''; echo '<(A)3'; echo 'isis agora lovecruft'; echo '' |"
 
 ## The definition of alternate identities depends on Mutt's version
 ## source $HOME/.mailrc/muttrc-hook-v1.5.6- -> $alternates
@@ -261,7 +262,7 @@ set reply_regexp="^((aw|antw.?|antwort|re([\[0-9\]+])*|r e|r?f|sv):[ \t]*)*"
 set reverse_name=yes                    # build the From: line from the
                                         # received address
 
-set save_empty=yes                      # don't remove empty mailboxes
+set save_empty=no                       # remove empty mailboxes
 
 set save_name=no                        # don't save outgoing messages by 
                                         # recipient, just put them in 
@@ -283,10 +284,14 @@ set sidebar_delim="|"                   # use a pipe to delimit the sidebar
 
 set sort=threads                        # primary sorting method
 
-set sort_aux=reverse-date               # how to sort subthreads
+#set sort_aux=reverse-date               # how to sort subthreads
+set sort_aux=reverse-last-date-received
 
 set sort_browser=alpha                  # how to sort files in the dir 
                                         # browser
+
+set sort_re=no                          # make msg a child of thread if the
+                                        # non-$repy_regexp parts match
 
 set status_format="-%r-Mutt: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?  %l]---(%s)-%>-(%P)---"
 
@@ -316,10 +321,12 @@ set use_domain=yes                      # qualify local addresses
                                         # with $hostname (which should be
                                         # set on a per-mailbox basis)
 
+set user_agent=no                       # Do not send user-agent header
+
 #set visual=gvim                        # editor invoked by ~v in the 
                                         # builtin editor
 
-#set nowait_key                         # prompt when a pipe returns 
+set wait_key=no                         # don't prompt when a pipe returns 
                                         # normal status
 
 #set write_inc=10                       # show progress while writing 
@@ -353,14 +360,6 @@ set use_domain=yes                      # qualify local addresses
 #         done; \
 #    fi; \
 #  done`
-
-#################################################################################
-## Tor Settings
-#################################################################################
-
-#unset use_from                         # Don't generate a From header
-set use_domain=yes
-set user_agent=no                       # Do not send user-agent header
 
 #################################################################################
 ## Header viewing
@@ -446,6 +445,7 @@ hdr_order Sender: From From: Subject: Date: Message-Id: User-Agent: \
 #send-hook mutt- 'set signature=~/.sigmutt;'
 
 send-hook .       'unmy_hdr X-Date'
+send-hook .       'unmy_hdr X-We-Are-Watching-You-Rubin'
 
 ## LULZ!
 send-hook starset 'my_hdr X-We-Are-Watching-You-Rubin: That's right.'
@@ -457,9 +457,6 @@ send-hook starset 'my_hdr X-We-Are-Watching-You-Rubin: That's right.'
 ## <pattern> is recipient(s), <mailbox> is where to save a copy
 ###########################################################################
 
-#fcc-hook combeplume       =_fun/combeplume
-#fcc-hook sasquad          =_fun/sasquad
-#fcc-hook series-awards    =_fun/series-awards
 #fcc-hook scape@ml         =_fun/scape
 #fcc-hook moderateurs-frjv =_fun/frjv
 
@@ -513,11 +510,25 @@ set query_command="abook --mutt-query '%s'"
 #       lists [ -group <name> ] <list-name> [ <list-name> ... ]
 ###########################################################################
 
-lists -group hackbloc march-hare-dev hackbloc-discuss hackthiszine
-subscribe march-hare-dev
+lists -group hackbloc march-hare-dev Hackbloc-discuss hackthiszine Hb-core
+#subscribe -group hackbloc
+
 lists -group hackerspaces noisebridge-discuss noisebridge-rack hackerspaces hackupy-discuss
-lists -group tor tor-talk tor-dev tor-assistants tor-weather tor2web-talk tor-commits
-subscribe tor-talk tor-dev tor-assistants tor-weather
+#subscribe -group hackerspaces
+
+lists -group tor tor-talk tor-dev tor-assistants tor-weather tor2web-talk tor-commits tor-internal tor-announce
+#subscribe -group tor
+
+lists -group globaleaks team@globaleaks.org people@globaleaks.org
+#subscribe -group globaleaks
+
+lists -group graceless graceless@googlegroups.com
+#subscribe -group graceless
+
+lists -group tahoe-lafs tahoe-dev
+#subscribe -group tahoe-lafs
+
+subscribe hackbloc march-hare-dev Hackbloc-discuss hackthiszine Hb-core hackerspaces noisebridge-rack tor-talk tor-dev tor-assistants tor-weather tor2web-talk tor-internal tor-announce tahoe-dev
 
 ###########################################################################
 # Automatically use entries from ~/.mailcap to view these MIME types

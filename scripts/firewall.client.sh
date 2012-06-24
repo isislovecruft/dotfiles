@@ -38,6 +38,9 @@ SSH_ALT_PORT="2222"
 MOSH=true
 MOSH_PORTS="60000:61000"
 
+TAHOE=true
+TAHOE_PORT="3456"
+
 SMTP_PORT="25"
 RPCBIND_PORT="111"
 RPCBIND_PORT2="33939"
@@ -174,6 +177,11 @@ sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 ## Allow Bittorrent peers to connect to us
 if $ALLOW_BITTORRENT ; then
     sudo iptables -A INPUT -p tcp --dport $BITTORRENT_TRACKER -j ACCEPT
+fi
+
+## Allow Tahoe-LAFS connections
+if $TAHOE ; then
+    sudo iptables -A INPUT -p tcp --dport $TAHOE_PORT -j ACCEPT
 fi
 
 ####################################################################################

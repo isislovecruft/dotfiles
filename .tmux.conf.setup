@@ -1,4 +1,4 @@
-splitw -h 'sudo -u debian-tor arm'
+splitw -h 'tor && sudo -u debian-tor arm'
 killp -t 0
 rename-window -t:1 arm 
 neww -n notes 'emacs -nw $HOME/NOTES.gpg'

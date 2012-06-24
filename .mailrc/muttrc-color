@@ -17,14 +17,14 @@ color attachment        brightmagenta   black
 color search            black           brightcyan   # how to hilite searches in the pager
 color quoted            yellow          black   # quoted text
 color quoted1           green           black
-color quoted2           yellow          black
-color quoted3           green           black
-color quoted4           cyan            black
-color quoted5           blue            black
-color quoted6           magenta         black
-color quoted7           red             black
-color quoted8           green           black
-color quoted9           cyan            black
+color quoted2           blue            black
+color quoted3           magenta         black
+color quoted4           red             black
+color quoted5           yellow          black
+color quoted6           green           black
+color quoted7           blue            black
+color quoted8           magenta         black
+color quoted9           red             black
 color underline         brightgreen     black
 color index             green           black "~F"
 color index             brightcyan      black "~N"

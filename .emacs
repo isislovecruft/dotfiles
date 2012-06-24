@@ -82,21 +82,33 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; NOTE: requires package xtrlock to be installed
+(require 'zone)
+;(setq zone-idle (* 60 20))
+;(zone-when-idle zone-idle)
 
-(defun lock-screen ()
-   "Lock screen using (zone) and xtrlock calls M-x zone on all frames
- and runs xtrlock"
-   (interactive)
-   (save-excursion
-     ;(shell-command "xtrlock &")
-     (set-process-sentinel
-      (start-process "xtrlock" nil "xtrlock")
-      '(lambda (process event)
-         (zone-leave-me-alone)))
-     (zone-when-idle 1)))
+;(defun lock-screen ()
+;   "Lock screen using (zone) and xtrlock calls M-x zone on all frames
+; and runs xtrlock"
+;   (interactive)
+;   (save-excursion
+;     ;(shell-command "xtrlock &")
+;     (set-process-sentinel
+;      (start-process "xtrlock" nil "xtrlock")
+;      '(lambda (process event)
+;         (zone-leave-me-alone)))
+;     ;(zone-when-idle 1)))
+;     (zone-when-idle zone-idle)))
 
 ;; Activate the zone mode screensaver!
 ;;(lock-screen)
+
+;; When not using X, don't show the menu bar
+;(when (and (not window-system)
+;           (fboundp 'menu-bar-mode))
+;  (menu-bar-mode 0))
+
+;; Prompt for a line and go to it with Ctrl-x+g
+(global-set-key "\C-xg" 'goto-line)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python Autocompletion

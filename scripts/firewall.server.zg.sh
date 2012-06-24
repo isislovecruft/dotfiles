@@ -46,13 +46,25 @@ FTP_PORT="21"
 FTPS_DATA_PORT="989"
 FTPS_CONTROL_PORT="990"
 
-NOT_A_MAIL_SERVER=true
+NOT_A_MAIL_SERVER=false
 SMTP_PORT="25"
 SMTP_ALT_PORT="465"
 POP3_PORT="110"
 POP3S_PORT="995"
 IMAP_PORT="143"
 IMAPS_PORT="993"
+
+NOT_AN_XMPP_SERVER=false
+STUN_SERVICE_1="3478"
+STUN_SERVICE_2="3479"
+XMPP_STARTTLS="5222"
+XMPP_SSL="5223"
+XMPP_FLASH_CROSS_DOMAIN="5229"
+XMPP_HTTP="7070"
+XMPP_HTTPS="7443"
+XMPP_FTP="7777"
+OPENFIRE_ADMIN_UNSECURED="9090"
+OPENFIRE_ADMIN_SECURED="9091"
 
 RPCBIND_PORT="111"
 #RPCBIND_PORT2="35996"
@@ -149,6 +161,31 @@ if $NOT_A_MAIL_SERVER ; then
     if [[ "$IMAPS_PORT" != "" ]]; then
         sudo iptables -A INPUT -p tcp --dport $IMAPS_PORT -j REJECT --reject-with tcp-reset
     fi
+else
+
+    if [[ "$SMTP_PORT" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $SMTP_PORT -j ACCEPT
+    fi
+
+    if [[ "$SMTP_ALT_PORT" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $SMTP_ALT_PORT -j ACCEPT
+    fi
+
+    if [[ "$POP3_PORT" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $POP3_PORT -j ACCEPT
+    fi
+
+    if [[ "$POP3S_PORT" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $POP3S_PORT -j ACCEPT
+    fi
+
+    if [[ "$IMAP_PORT" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $IMAP_PORT -j ACCEPT
+    fi
+
+    if [[ "$IMAPS_PORT" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $IMAPS_PORT -j ACCEPT
+    fi
 fi
 
 ## If it's 'true' that we are $NOT_AN_FTP_SERVER, then we should not allow these
@@ -166,6 +203,91 @@ if $NOT_AN_FTP_SERVER ; then
 
     if [[ "$FTPS_CONTROL_PORT" != "" ]]; then
         sudo iptables -A INPUT -p tcp --dport $FTPS_CONTROL_PORT -j REJECT --reject-with tcp-reset
+    fi
+fi
+
+## XMPP SERVER SETTINGS
+if $NOT_AN_XMPP_SERVER ; then
+
+    if [[ "$STUN_SERVICE_1" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $STUN_SERVICE_1 -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$STUN_SERVICE_2" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $STUN_SERVICE_2 -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$XMPP_STARTTLS" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_STARTTLS -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$XMPP_SSL" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_SSL -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$XMPP_FLASH_CROSS_DOMAIN" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_FLASH_CROSS_DOMAIN -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$XMPP_HTTP" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_HTTP -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$XMPP_HTTPS" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_HTTPS -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$XMPP_FTP" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_FTP -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$OPENFIRE_ADMIN_UNSECURED" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $OPENFIRE_ADMIN_UNSECURED -j REJECT --reject-with tcp-reset
+    fi
+
+    if [[ "$OPENFIRE_ADMIN_SECURED" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $OPENFIRE_ADMIN_SECURED -j REJECT --reject-with tcp-reset
+    fi
+else
+
+    if [[ "$STUN_SERVICE_1" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $STUN_SERVICE_1 -j ACCEPT
+    fi
+
+    if [[ "$STUN_SERVICE_2" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $STUN_SERVICE_2 -j ACCEPT
+    fi
+
+    if [[ "$XMPP_STARTTLS" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_STARTTLS -j ACCEPT
+    fi
+
+    if [[ "$XMPP_SSL" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_SSL -j ACCEPT
+    fi
+
+    if [[ "$XMPP_FLASH_CROSS_DOMAIN" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_FLASH_CROSS_DOMAIN -j ACCEPT
+    fi
+
+    if [[ "$XMPP_HTTP" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_HTTP -j ACCEPT
+    fi
+
+    if [[ "$XMPP_HTTPS" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_HTTPS -j ACCEPT
+    fi
+
+    if [[ "$XMPP_FTP" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $XMPP_FTP -j ACCEPT
+    fi
+
+    if [[ "$OPENFIRE_ADMIN_UNSECURED" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $OPENFIRE_ADMIN_UNSECURED -j ACCEPT
+    fi
+
+    if [[ "$OPENFIRE_ADMIN_SECURED" != "" ]]; then
+        sudo iptables -A INPUT -p tcp --dport $OPENFIRE_ADMIN_SECURED -j ACCEPT
     fi
 fi
 

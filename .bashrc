@@ -144,7 +144,8 @@ alias eip='ip_external.sh'
 alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
 alias hyde='$HOME/dev/web/hyde/hyde.py'
 #alias tor='sudo tor -f /etc/tor/torrc'
-#alias tor='sudo -u debian-tor tor -f /etc/tor/torrc'
+alias tor='sudo -u debian-tor /usr/local/bin/tor -f /etc/tor/torrc'
+alias arm='sudo -u debian-tor arm'
 alias hieroglyph="echo -e \"\033(0\""
 alias pytebeat="aoss $HOME/dev/pytebeat/pytebeat.py"
 alias keysign="keysign.sh "
@@ -187,7 +188,9 @@ fi
 #export TZ=UTC                             # Blue telephone box
 #export EDITOR=/usr/bin/emacs              # Uses X :(
 #export VISUAL=/usr/bin/emacs
-export BROWSER=/usr/bin/iceweasel
+export BROWSER=/usr/bin/firefox
+#export SSH_AUTH_SOCK=/tmp/ssh-agent
+#export SSH_AGENT_PID=$(pgrep ssh-agent)
 
 ## Let's make pretty things!
 $HOME/scripts/bash_pretty_login.py
@@ -216,3 +219,6 @@ export PATH=$PATH:$HOME/dev/git-hg/bin
 
 ## Export path for Go
 export PATH=$PATH:/usr/local/go/bin
+
+## Export path for Tahoe
+export PATH=$PATH:$HOME/dev/tahoe-lafs/bin/

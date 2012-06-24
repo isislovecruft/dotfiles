@@ -70,7 +70,13 @@
 ################POSTPONE        POSTPONED MESSAGE RECALL MENU
 ################GENERIC         GENERIC KEYMAP
 
-  macro generic  ,/ "<shell-escape>mairix " "search all mailboxes with mairix"
+  macro generic  ,/ "<shell-escape>mairix -f $HOME/.mailrc/mairixrc " "search all mailboxes with mairix"
+
+  bind pager <Home>      sidebar-prev
+  bind pager <End>       sidebar-next
+  bind pager <Home>\C    sidebar-scroll-up
+  bind pager <End>\C     sidebar-scroll-down
+  bind pager <Insert>    sidebar-open
 
 ################EDITOR          LINE EDITOR
 
@@ -106,6 +112,7 @@
   bind pager r           reply
   bind pager :           enter-command
   bind pager t           tag-message
+  bind pager H           display-toggle-weed
 
   macro pager z   ":set pager_index_lines=10\n"        "Zoom out"
   macro pager Z   ":set pager_index_lines=0\n"         "Zoom in"
