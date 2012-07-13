@@ -1,37 +1,59 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+##############################################################################
+# 
+# ~/.bashrc 
+# --------- 
+# Executed by bash(1) for non-login shells.
+#
+# See /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples.
+#
+# @author Isis Agora Lovecruft, 0x2cdb8b35
+# @date 10 July 2012
+# @version 0.1.0
+#_____________________________________________________________________________
+#
+# Changelog:
+# ----------
+# v0.2.0 Added ttytter though Tor alias and rearranged exports and aliases.
+# v0.1.0 Properly added a changelog for vc.
+##############################################################################
 
-# If not running interactively, don't do anything
+## If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# don't put duplicate lines in the history. See bash(1) for more options
-# ... or force ignoredups and ignorespace
+################
+## History
+################
+## Don't put duplicate lines in the history. See bash(1) for more options
+## ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
 
-# append to the history file, don't overwrite it
+## Append to the history file, don't overwrite it:
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+## For setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+################
+## Display
+################
+## Check the window size after each command and, if necessary,
+## update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# make less more friendly for non-text input files, see lesspipe(1)
+## Make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
+## Set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# if the command-not-found package is installed, use it
+## If the command-not-found package is installed, use it
 if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-not-found ]; then
     function command_not_found_handle {
-	# check because c-n-f could've been removed in the meantime
+	## Check because c-n-f could've been removed in the meantime
 	if [ -x /usr/lib/command-not-found ]; then
 	    /usr/bin/python /usr/lib/command-not-found -- "$1"
 	    return $?
@@ -39,27 +61,28 @@ if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-no
 	    /usr/bin/python /usr/share/command-not-found/command-not-found -- "$1"
 	    return $?
 	else
-	    printf "%s: command not found\n" "$1" >&2
+	    printf "%s isn't a fucking command.\n" "$1" >&2
+        printf "If you're drunk then you should go for a bike ride, or at least stop coding.\n" "$1" >&2
 	    return 127
 	fi
     }
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
+## set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
+## uncomment for a colored prompt, if the terminal has the capability; turned
+## off by default to not distract the user: the focus in a terminal window
+## should be on the output of commands, not on the prompt
 force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
+	## We have color support; assume it's compliant with Ecma-48
+	## (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	## a case would tend to support setf rather than setaf.)
 	color_prompt=yes
     else
 	color_prompt=yes
@@ -73,7 +96,7 @@ else
 fi
 unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
+## If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
@@ -82,7 +105,56 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliases
+## Let's make pretty things!
+$HOME/scripts/bash_pretty_login.py
+
+###############################################################################
+## Environment & Paths
+###############################################################################
+
+## Environment variables
+########################
+export TZ=UTC                              # Blue telephone box
+export EDITOR="/usr/bin/emacs -nw"         # (Hopefully this doesn't) Uses X :(
+#export VISUAL=/usr/bin/emacs
+export BROWSER=/usr/bin/firefox
+#export SSH_AUTH_SOCK=/tmp/ssh-agent
+#export SSH_AGENT_PID=$(pgrep ssh-agent)
+
+## Path 
+#######################
+export PATH=${PATH}:$HOME/dev/web/hyde/          ## Export path to hyde.py
+export PATH=$PATH:$HOME/scripts                  ## Export path to scripts dir
+export PATH=$PATH:$HOME/dev/git-hg/bin           ## Export path to git-hg
+export PATH=$PATH:/usr/local/go/bin              ## Export path for Go
+export PATH=$PATH:$HOME/dev/tahoe-lafs/bin/      ## Export path for Tahoe
+export NDKROOT=$HOME/dev/android/android-ndk-r7  ## Export path for android NDK
+
+## Add export path for Android SDK platform-tools and tools:
+export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/tools
+export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/platform-tools
+
+## Export paths for common toolchains for android NDK
+## Leave these commented out unless you're specifically cross-compiling 
+## for ArmV7:
+#export AR=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ar
+#export LD=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ld
+#export CC=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-gcc
+
+###############################################################################
+## Aliases
+###############################################################################
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+## Enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -94,41 +166,36 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
+## More ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
+## Add an "alert" alias for long running commands.  Use like so:
+##   $ sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# Extra user defined alaises:
+#################################
+## Extra user defined alaises: 
+#################################
+##
+## Editing
+##############
 alias e='emacs -nw'
 alias ec='emacsclient -t'
 alias es='emacs -nw --daemon'
+alias N='emacs -nw $HOME/NOTES.gpg'
+##
+## Sudo & Apt
+##############
 alias s='sudo '
-alias whack='/home/isis/scripts/mod_wifi.sh'
 alias ag='apt-get'
 alias acs='apt-cache search'
+##
+## Development
+################
 alias dev='cd /home/isis/dev'
 alias back='cd $OLDPWD'
-alias arm='sudo -u debian-tor arm'
-## Moved to scripts/ so muttrc can call it:
-#alias sprunge="curl --socks4a 127.0.0.1:59050 -A 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0' -F 'sprunge=<-' http://sprunge.us"
-alias 30='dmesg | tail -n 30 | ccze -A'
-alias 300='dmesg | tail -n 300 | ccze -A'
-alias check='ping -c 3 google.com'
-alias fuck='sudo killall'
 alias rms='rm ./*~'
 alias rmp='rm ./\#*#'
 alias rme='rm ./*~ && rm ./\#*#'
@@ -140,85 +207,66 @@ alias removeslash="cpp -fpreprocessed"
 alias boilerpy="boilerplate.sh $HOME/scripts/boilerplate-python $1 "
 alias boilersh="boilerplate.sh $HOME/scripts/boilerplate-bash $1 "
 alias gitdate='. gitdate.sh'
-alias eip='ip_external.sh'
-alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
-alias hyde='$HOME/dev/web/hyde/hyde.py'
-#alias tor='sudo tor -f /etc/tor/torrc'
-alias tor='sudo -u debian-tor /usr/local/bin/tor -f /etc/tor/torrc'
-alias arm='sudo -u debian-tor arm'
-alias hieroglyph="echo -e \"\033(0\""
-alias pytebeat="aoss $HOME/dev/pytebeat/pytebeat.py"
-alias keysign="keysign.sh "
+##
+## Logs & Processes
+###################
+alias 30='dmesg | tail -n 30 | ccze -A'
+alias 300='dmesg | tail -n 300 | ccze -A'
+alias fuck='sudo killall '
+##
+## Networking
+#################
+alias check='ping -c 3 google.com'
 alias fwup="firewall.client.sh"
 alias fwdown="sudo iptables -F; sudo iptables -X; sudo iptables -A INPUT -j ACCEPT; sudo iptables -A FORWARD -j ACCEPT; sudo iptables -A OUTPUT -j ACCEPT"
+alias eip='ip_external.sh'
+alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
+## Moved to scripts/ so muttrc can call it:
+#alias sprunge="curl --socks4a 127.0.0.1:59050 -A 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0' -F 'sprunge=<-' http://sprunge.us"
+##
+## Tor Aliases
+###############
+alias tor='sudo -u debian-tor /usr/local/bin/tor -f /etc/tor/torrc'
+alias arm='sudo -u debian-tor arm'
+alias mutt="mutt-patched -F $HOME/.mailrc/muttrc"
+alias muttor="coproc mailwithtor; mutt-patched -F $HOME/.mailrc/muttrc.tor"
 alias offlineimap="offlineimap -c /home/isis/.mailrc/offlineimaprc"
 alias torofflineimap="usewithtor offlineimap -c $HOME/.mailrc/offlineimaprc-tor"
-alias mutt="mutt-patched"
 alias mairix="mairix -f $HOME/.mailrc/mairixrc"
-alias N='emacs -nw $HOME/NOTES.gpg'
+alias twitter="usewithtor ttytter | ccze -A"
+##
+## Fucking around
+#################
+alias hieroglyph="echo -e \"\033(0\""
+alias pytebeat="aoss $HOME/dev/pytebeat/pytebeat.py"
+alias hyde='$HOME/dev/web/hyde/hyde.py'
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+###############################################################################
+
+## enable programmable completion features (you don't need to enable
+## this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+## sources /etc/bash.bashrc).
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+###############################################################################
 ## TMUX
+###############################################################################
+
 if which tmux 2>&1 >/dev/null; then
     ## If no tmux session is started; start a new session:
     if test -z ${TMUX}; then
-        ## We actually need to attach to it, because tmux.conf starts
-        ## the session for us:
-	    #tmux attach
-        ## that didn't work...
-        ## now .tmux.conf.setup is bound to to a key, so do:
+        ## Now .tmux.conf.setup is bound to C-h-R, so do:
         tmux
-        ## Since this usually occurs just after boot, start the
-        ## firewall while we're at it:
-        $HOME/scripts/firewall.client.sh
+
+        ## Actually, iptables-persistent seems to work now...
+        ## ...but if it doesn't, call this from .tmux.conf.setup, so 
+        ## that it is not backgrounded by tmux:
+        #$HOME/scripts/firewall.client.sh
     fi
     ## When quitting tmux, try to attach:
     while test -z ${TMUX}; do
 	    tmux attach || break
     done
 fi
-
-## Environment variables:
-#export TZ=UTC                             # Blue telephone box
-#export EDITOR=/usr/bin/emacs              # Uses X :(
-#export VISUAL=/usr/bin/emacs
-export BROWSER=/usr/bin/firefox
-#export SSH_AUTH_SOCK=/tmp/ssh-agent
-#export SSH_AGENT_PID=$(pgrep ssh-agent)
-
-## Let's make pretty things!
-$HOME/scripts/bash_pretty_login.py
-
-## Export path for android NDK
-export NDKROOT=$HOME/dev/android/android-ndk-r7
-
-## Export paths for common toolchains for android NDK
-## Leave these commented out unless you're specifically cross-compiling for ArmV7
-#
-#export AR=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ar
-#export LD=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ld
-#export CC=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-gcc
-
-## Add export path for Android SDK platform-tools and tools:
-export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/tools:$HOME/dev/android/android-sdk-linux/platform-tools
-
-## Export path to hyde.py
-export PATH=${PATH}:$HOME/dev/web/hyde/
-
-## Export path to homebrewed scripts directory
-export PATH=$PATH:$HOME/scripts
-
-## Export path to git-hg
-export PATH=$PATH:$HOME/dev/git-hg/bin
-
-## Export path for Go
-export PATH=$PATH:/usr/local/go/bin
-
-## Export path for Tahoe
-export PATH=$PATH:$HOME/dev/tahoe-lafs/bin/
