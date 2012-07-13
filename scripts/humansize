@@ -1,0 +1,102 @@
+#!/bin/bash
+###############################################################################
+#
+# humansize
+# ---------
+# Prints a human readable size for a file.
+#
+# @author Isis Agora Lovecruft, 0x2cdb8b35
+# @date 20 May 2012
+# @version 0.0.1
+#______________________________________________________________________________
+# Changelog:
+###############################################################################
+
+function usage
+{
+    echo "Usage: humansize <file> [options]"; echo ""
+    echo "-s, --size [kb|mb|gb|tb]             Size to display in output"
+    echo "-i, --interactive                    Interactive mode"
+    echo "-h, --help                           Show this cruft"
+}
+
+F_TO_PARSE=
+INTERACTIVE=0
+SIZE_TO_DISPLAY="mb"
+
+if [ "$#" == "0" ]; then
+    usage
+    exit
+fi
+
+if [ "$#" == "1" ]; then
+    F_TO_PARSE=$1
+else
+    while [ "$1" != "" ]; do
+        case $1 in
+            -s | --size )           shift
+                                    SIZE_TO_DISPLAY=$1
+                                    ;;
+            -i | --interactive )    INTERACTIVE=1
+                                    ;;
+            -h | --help )           usage
+                                    exit
+                                    ;;
+            * )                     F_TO_PARSE=$1
+        esac
+        shift
+    done    
+fi
+
+IN_BYTES=$(stat --printf="%s" $F_TO_PARSE)
+IN_KILOBYTES=$(echo $[IN_BYTES / 1024])
+IN_MEGABYTES=$(echo $[IN_KILOBYTES / 1024])
+IN_GIGABYTES=$(echo $[IN_MEGABYTES / 1024])
+IN_TERRABYTES=$(echo $[IN_GIGABYTES / 1024])
+
+function showsize
+{
+    if [ "$SIZE_TO_DISPLAY" == "kb" ]; then
+        echo "$IN_KILOBYTES KB"
+    elif [ "$SIZE_TO_DISPLAY" == "mb" ]; then
+        echo "$IN_MEGABYTES MB"
+    elif [ "$SIZE_TO_DISPLAY" == "gb" ]; then
+        echo "$IN_GIGABYTES GB"
+    elif [ "$SIZE_TO_DISPLAY" == "tb" ]; then
+        echo "$IN_TERRABYTES TB"
+    fi
+}
+
+if [ "$INTERACTIVE" = "1" ]; then
+
+    RESPONSE=
+
+    echo -n "Enter name of file [$F_TO_PARSE] > "
+    read RESPONSE
+    if [ -n "$RESPONSE" ]; then
+        F_TO_PARSE=$RESPONSE
+    fi
+
+    if [ -f $F_TO_PARSE ]; then
+        echo -n "What unit should we display the filesize in? (kb/mb/gb/tb) > "
+        read RESPONSE
+        #if [ "$RESPONSE" != "y" ]; then
+        #    echo "Exiting program."
+        #    exit 1
+        #fi
+        case $RESPONSE in
+            kb )                    echo "$IN_KILOBYTES KB"
+                                    ;;
+            mb )                    echo "$IN_MEGABYTES MB"
+                                    ;;
+            gb )                    echo "$IN_GIGABYTES GB"
+                                    ;;
+            tb )                    echo "$IN_TERRABYTES TB"
+                                    ;;
+            * )                     exit 1
+                                    ;;
+        esac
+    fi
+else
+    showsize
+fi
