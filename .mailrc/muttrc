@@ -180,6 +180,10 @@ set hide_thread_subject=no              # show me the subjects, even if
                                         # remember
 set honor_followup_to
 
+set ignore_list_reply_to=no             # If "yes", use <list-reply> to 
+                                        # respond to list, <group-reply>
+                                        # to respond to sender and list. 
+
 set include=yes                         # always include messages when 
                                         # replying
 
@@ -252,7 +256,8 @@ set read_inc=10                         # show progress when reading a
 
 set recall=ask-no                       # prompt to recall postponed 
                                         # messages
-set reply_to=ask-yes
+
+set reply_to=ask-no                     # Don't honor the Reply-To: field
 
 set reply_regexp="^((aw|antw.?|antwort|re([\[0-9\]+])*|r e|r?f|sv):[ \t]*)*"
 
@@ -275,6 +280,9 @@ set sendmail="/usr/bin/msmtp -C $HOME/.mailrc/msmtprc"
 #set sendmail="sudo %?p?--passphrase-fd 0? socat -d -d -d -lu -lf $HOME/.mailrc/socat-msmtp.log -L $HOME/.mailrc/socat-msmtp-lockfile TCP4-LISTEN:2525,fork SOCKS4A:localhost:66.147.244.158:465,socksport=59050,socksuser=\"\" & /usr/bin/msmtp -a default"
 
 set shell="/bin/bash"                   # program to use for shell escapes
+
+set sleep_time=0                        # don't do the stupid pause thing when
+                                        # moving or changing folders, just do it.
 
 set sidebar_visible                     # show the account folders sidebar
 
