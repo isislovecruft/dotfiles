@@ -1,11 +1,48 @@
-splitw -h 'tor && sudo -u debian-tor arm'
-killp -t 0
-rename-window -t:1 arm 
-neww -n notes 'emacs -nw $HOME/NOTES.gpg'
-selectp -t 0                                   # Select pane 0
-splitw -h -p 50 '$HOME/scripts/firewall.client.sh' # Split pane 0 vertically by 50%
-selectp -t 1                                   # Select pane 1
-splitw -v -p 25                                # Split pane 1 horizontally by 25%
-selectp -t 0                                   # Select pane 0
-neww -n mutt 'mutt-patched'
-selectp -t 0 
+##############################################################################
+##
+## .tmux.conf.setup
+## ----------------
+## .bashrc autostarts a tmux session. From that session, do C-h-R to source
+## this dotfile, which will setup default windows and panes with frequently
+## used programs running. 
+##
+## NOTE: If you call a script which exits or backgrounds, the window/pane 
+##       will close. This dotfile is best used for scripts which effect
+##       already running daemons, such as iptables or cron, or else restrict
+##       calls soleely to interactive programs like tor-arm or mutt.
+##
+## ANOTHER NOTE: This dotfile can't see your .bashrc or .bash_aliases.
+##
+## @author: Isis Agora Lovecruft, 0x2cdb8b35
+## @date: 20 April 2012
+## @version: v0.0.2
+##____________________________________________________________________________
+## Changelog:
+## v0.0.2 Fixed the Tor startup since the LSB startup script doesn't like my
+##        home-brewed Tor builds. Added greyarea window to make remembering
+##        to check things there less painful. Removed firewall script.
+## v0.0.1 Init.
+##
+##############################################################################
+
+splitw -h 'sudo -u debian-tor /usr/local/bin/tor -f /etc/tor/torrc; sudo -u debian-tor arm'
+killp -t 0                                          # This making a new pane and
+rename-window -t:1 arm                              # killing the first one 
+                                                    # nonsense is necessary for
+                                                    # tmux to keep its pants on
+
+## Uncomment the first line to start muttor instead:
+#neww -n muttor '$HOME/scripts/mailwithtor & /usr/bin/mutt-patched -F $HOME/.mailrc/muttrc.tor'
+neww -n mutt '/usr/bin/mutt-patched -F $HOME/.mailrc/muttrc'    # mutt tab
+selectp -t 0                                                    # --------
+
+neww -n greyarea '/usr/bin/mosh greyarea'           # greyarea tab
+selectp -t 0                                        # ------------
+
+neww -n notes 'emacs -nw $HOME/NOTES.gpg'           # notes tab
+selectp -t 0                                        # ---------
+#splitw -h -p 40 '$HOME/scripts/firewall.client.sh'  # Split vertically by 60%
+splitw -h -p 45 
+selectp -t 1                                        # Select the new pane
+splitw -v -p 35                                     # Split horizontally by 25%
+selectp -t 0
