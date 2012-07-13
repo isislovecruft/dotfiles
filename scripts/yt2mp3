@@ -1,0 +1,41 @@
+#!/bin/bash
+###############################################################################
+#
+# yt2mp3
+# --------------
+# youtube to mp3 from the command line like wut.
+#
+# @author Isis Agora Lovecruft, 0x2cdb8b35
+# @date 22 June 2012
+# @version 0.0.1
+#______________________________________________________________________________
+# Changelog:
+###############################################################################
+
+YOUTUBEDL_IS_INSTALLED=$(dpkg -l | awk '/^ii/{print $2}' | grep youtube-dl)
+
+if [[ "$#" == "0" ]]; then
+    echo -e "\033[40m\033[1;32m  Usage: ./yt2mp3 \"<youtube.com/songlink>\" \"</path/to/store/song>\" \033[0m"; echo;
+    echo -e "\033[40m\033[0;32m  Download into a temporary file the video from the youtube link and extracts the  \033[0m"
+    echo -e "\033[40m\033[0;32m  audio to an 128kb/s mp3 with the given name. \033[0m"; echo;
+    echo -e "Dependencies: youtube-dl ffmpeg \033[0m"; echo;
+    exit 1
+fi
+
+YTFILE=$PWD/.youtube-dl-$RANDOM-$RANDOM.flv
+
+if [[ "$YOUTUBEDL_IS_INSTALLED" != "" ]]; then
+    youtube-dl --output=$YTFILE --format=18 "$1"
+else
+    echo -e "\033[40m\033[1;32m  Missing dependencies. Please install youtube-dl and ffmpeg. \033[0m"
+fi
+
+if [[ -n $HOME/music/"$2" ]]; then
+    ffmpeg -i $YTFILE -acodec libmp3lame -ac 2 -ab 128k -vn -y $HOME/music/"$2"
+    rm $YTFILE
+else
+    echo; echo -e "Please choose a different location:  \033[0m"
+        read opt
+    ffmpeg -i $YTFILE -acodec libmp3lame -ac 2 -ab 128k -vn -y $HOME/music/"$2"
+    rm $YTFILE
+fi
