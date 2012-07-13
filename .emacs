@@ -16,15 +16,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Four spaces, not tabs
+;;
+;;    "Everytime you insert a tab into your code, a kitten
+;;     somewhere dies..." -Arturo Filasto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;; Defaults
+;; ------------------
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4) ; set tab to 4 for all buffers
-(custom-set-variables
- '(fill-column 78)
- '(tab-always-indent (quote complete)))
-(custom-set-faces)
 
+;; HTML
+;; ------------------
 (add-hook 'html-mode-hook
         (lambda ()
           ;; Default indentation is 2 spaces, changing to 4.
@@ -32,6 +34,77 @@
 ;(add-hook 'html-mode-hook
 ;              (lambda ()
 ;                (setq indent-line-function 'indent-relative)))
+
+;; C/C++
+;; ------------------
+;; Let's control C indentation separately, since Nick Mathewson is picky. :D
+;;
+;; Default styles include: 
+;;   * "gnu":The default style for GNU projects
+;;   * “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+;;   * “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+;;   * “whitesmith”: Popularized by the examples that came with Whitesmiths C, 
+;;                   an early commercial C compiler.
+;;   * “stroustrup”: What Stroustrup, the author of C++ used in his book
+;;   * “ellemtel”: Popular C++ coding standards as defined by “Programming in 
+;;                 C++, Rules and Recommendations” 
+;;   * “linux”: What the Linux developers use for kernel development
+;;   * “python”: What Python developers use for extension modules
+;;   * “java”: The default style for java-mode (see below)
+;;   * “user”: When you want to define your own style
+;; --------------------
+
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
+;; The following autoindents after hitting return:
+(require 'cc-mode)
+(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+
+;; Automatically put parameters on their own lines if the function definition
+;; line is too long:
+(defconst my-c-lineup-maximum-indent 30)
+(defun my-c-lineup-arglist (langelem)
+  (let ((ret (c-lineup-arglist langelem)))
+    (if (< (elt ret 0) my-c-lineup-maximum-indent)
+        ret
+      (save-excursion
+        (goto-char (cdr langelem))
+        (vector (+ (current-column) 8))))))
+(defun my-indent-setup ()
+  (setcdr (assoc 'arglist-cont-nonempty c-offsets-alist)
+     '(c-lineup-gcc-asm-reg my-c-lineup-arglist)))
+(add-hook 'cc-mode-hook 'my-indent-setup) ; NOTE: maybe 'java-mode-hook
+
+;;
+;; Colours
+;;;;;;;;;;;;;;;;;;;;;;;
+(put 'upcase-region 'disabled nil)
+(custom-set-variables
+ '(fill-column 78)
+ '(tab-always-indent (quote complete)))
+(custom-set-faces
+ '(ac-gtags-candidate-face ((t (:background "red" :foreground "lightgray"))))
+ '(ac-gtags-selection-face ((t (:foreground "red"))))
+ '(ac-selection-face ((t (:background "red" :foreground "white"))))
+ '(bold ((t (:weight extra-bold))))
+ '(buffer-menu-buffer ((t (:inherit mode-line :inverse-video t))))
+ '(cua-global-mark ((((class color)) (:background "cyan" :foreground "black"))))
+ '(isearch ((((class color) (min-colors 8)) (:background "cyan" :foreground "black"))))
+ '(isearch-fail ((((class color) (min-colors 8)) (:background "red" :foreground "black"))))
+ '(italic ((((supports :underline t)) (:underline t :slant italic))))
+ '(lazy-highlight ((((class color) (min-colors 8)) (:background "yellow" :foreground "black"))))
+ '(match ((((class color) (min-colors 8) (background dark)) (:background "blue" :foreground "grey8"))))
+ '(menu ((((type tty)) (:background "green" :foreground "black" :weight extra-bold))))
+ '(mode-line ((t (:background "green" :foreground "black" :weight extra-bold))))
+ '(mode-line-buffer-id ((t (:foreground "black" :weight ultra-bold))))
+ '(mode-line-highlight ((t (:inherit highlight))))
+ '(mode-line-inactive ((default (:inherit mode-line)) (nil nil)))
+ '(popup-isearch-match ((t (:background "sky blue" :foreground "black"))))
+ '(popup-menu-selection-face ((t (:background "steelblue" :foreground "black"))))
+ '(popup-scroll-bar-background-face ((t (:background "gray6" :foreground "cyan"))))
+ '(query-replace ((t (:inherit isearch))))
+ '(region ((((class color) (min-colors 8)) (:background "violet" :foreground "black")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EasyPG Auto(en|de)cryption
@@ -116,15 +189,15 @@
 
 ;; Code for autocomplete.el and dictionaries
 
-(add-to-list 'load-path "~/.emacs.d/")
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict/")
-(ac-config-default)
-
 (require 'python)
 (require 'auto-complete)
 ;; Uncomment the following to load Yasnippet
-;;(require 'yasnippet)
+;(require 'yasnippet)
+
+;(add-to-list 'load-path "~/.emacs.d/vendor/auto-complete")
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/vendor/auto-complete/dict")
+(require 'auto-complete-config)
+(ac-config-default)
 
 ;; Reconfigure python-mode
  
@@ -132,7 +205,7 @@
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
-;; Initialize Pymacs                                                                                           
+;; Initialize Pymacs                                
 (autoload 'pymacs-apply "pymacs")
 (autoload 'pymacs-call "pymacs")
 (autoload 'pymacs-eval "pymacs" nil t)
@@ -144,18 +217,18 @@
 (pymacs-load "ropemacs" "rope-")
 (setq ropemacs-enable-autoimport t)
 
-;; Initialize Yasnippet                                                            
-;Don't map TAB to yasnippet                                                        
-;In fact, set it to something we'll never use because                              
+;; Initialize Yasnippet   
+;Don't map TAB to yasnippet 
+;In fact, set it to something we'll never use because
 ;we'll only ever trigger it indirectly. 
 ;                              
 ;(setq yas/trigger-key (kbd "C-c <kp-multiply>"))
 ;(yas/initialize)
 ;(yas/load-directory "~/.emacs.d/snippets")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;             
-;;; Auto-completion                                                                
-;;;  Integrates:                                                                   
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Auto-completion         
+;;;  Integrates:      
 ;;;   1) Rope                             
 ;;;   2) Yasnippet                 
 ;;;   all with AutoComplete.el        
@@ -206,7 +279,8 @@
                  (set (make-local-variable 'ac-sources)
                       (append ac-sources '(ac-source-rope)))
                  (set (make-local-variable 'ac-find-function) 'ac-python-find)
-                 (set (make-local-variable 'ac-candidate-function) 'ac-python-candidate)
+                 (set (make-local-variable 'ac-candidate-function) 
+                      'ac-python-candidate)
                  (set (make-local-variable 'ac-auto-start) nil)))
 
 ;;Isis' python specific tab completion
@@ -263,16 +337,3 @@
 ;;; End Auto Completion
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Begin .Org mode configuration
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; The following lines are always needed.  Choose your own keys.
-;     (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-;     (add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
-;     (global-set-key "\C-cl" 'org-store-link)
-;     (global-set-key "\C-ca" 'org-agenda)
-;     (global-set-key "\C-cb" 'org-iswitchb)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; End .Org mode configuration
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(put 'upcase-region 'disabled nil)
