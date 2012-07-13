@@ -1,0 +1,569 @@
+###########################################################################
+#  .muttrc
+#
+#  @author Isis Lovecruft, 0x2cdb8b35
+#  @version 0.0.3
+#__________________________________________________________________________
+# 
+#  Changelog:
+#  v0.0.3: *Mairix for multiple maildir searches.
+#
+#  v0.0.2: *Now uses OfflineIMAP called with "$ usewithtor offlineimap"
+#           instead of fetchmail with a homebrewed socat socks4a proxy.
+#
+#  v0.0.1: *Initial settings taken from 
+#           http://hermitte.free.fr/mutt/files/mailrc/muttrc.html and from
+#           reading the fucking manual.
+###########################################################################
+
+## Use default configuration
+source "/etc/Muttrc"
+
+###########################################################################
+#  Identities
+###########################################################################
+
+## Identity settings for individual accounts are now stored in their 
+## respective files. See $HOME/.mailrc/muttrc-accounts-<account_name>.
+
+## Signature
+#set signature="~/.signature"   # file which contains my signature
+set sig_dashes=no               # Signatures shouldn't start with a "-- "
+set sig_on_top=yes              # Put my signature before quoted text
+set signature="echo ''; echo ''; echo '<(A)3'; echo 'isis agora lovecruft'; echo '' |"
+
+## The definition of alternate identities depends on Mutt's version
+## source $HOME/.mailrc/muttrc-hook-v1.5.6- -> $alternates
+## source $HOME/.mailrc/muttrc-hook-v1.5.6+ -> :alternates
+source $HOME/.mailrc/muttrc-hook-v`$HOME/.mailrc/muttrc-chk-ver.sh 1.5.6`
+
+## $envelope_from is required in order to use an address recognized by
+## the real smtp server not the local one (ie, not Hamster).
+set envelope_from=yes
+
+###########################################################################
+## Account hooks
+###########################################################################
+# 1) Define the global hook that unsets variables when specialized hooks
+#    do not match
+# 2) Define the specialized hooks with:
+#
+#    * Hook that does not display anything and is self-sufficient (however,
+#      the password appears in the .muttrc):
+#
+#      account-hook imap://imap.domain/ 'set imap_user="login" ; \ 
+#          set imap_pass="passwd"'
+#      mailbox imap://imap.domain/
+#
+#    * Non-hook that does not display anything, requires the user to enter
+#      the password:
+#      mailbox imap://login@imap.domain/
+#
+#    * Non-hook that does display the password in mutt, but leaves it in
+#      clear in the .muttrc:
+#      mailbox imap://login:passwd@imap.domain/
+#
+# Same thing with pop3 accounts.
+###########################################################################
+
+account-hook . 'unset imap_user ; unset imap_pass ; unset tunnel'
+
+## Remote IMAP, synced locally with offlineimap:
+source $HOME/.mailrc/muttrc-accounts-patterns
+#source $HOME/.mailrc/muttrc-accounts-thronedomelinescobra
+
+## Local mailboxes + other system dependent settings
+#source $HOME/.mailrc/muttrc-hook-`uname -s`_`uname -m`
+
+##############
+# Patch SMTP #
+##############
+# set sendmail='builtin'
+# set smtp_serv = "mail.server.com"
+# set smtp_user = "user"                # log on to $smtp_serv as $smtp_user
+# set smtp_pass = "password"            # use ESMPT and "AUTH LOGIN"
+# set smtp_serv = "localhost"
+# set smtp_user = "user"                # log on to $smtp_serv as $smtp_user
+# set smtp_pass = "password"            # use ESMPT and "AUTH LOGIN"
+## Warning: password is sent as plain text (base64 encoded. no encyption)
+
+###########################################################################
+## Sorted miscellaneous settings.
+###########################################################################
+
+set abort_nosubject=no                  # allow entry of messages with
+                                        # no subject
+
+set abort_unmodified=yes                # automatically abort empty replies
+
+set allow_8bit                          # never do Q-P encoding on legal 
+                                        # 8-bit chars
+
+set allow_ansi=no                       # no ANSI escape chars allowed!
+
+unset arrow_cursor                      # use -> instead of hiliting the 
+                                        # whole line
+
+set ascii_chars=no                      # don't use ASCII instead of ACS 
+                                        # chars for threads
+
+#set askbcc                             # ask me everytime if I want to bcc
+
+#set askcc                              # ask me everytime if I want to cc
+
+set attribution="On %d, thus spake %n:" # how to attribute replies
+
+unset autoedit                          # go to $EDITOR right away
+
+set auto_tag                            # always operate on tagged messages
+
+set beep=no                             # don't beep on errors
+
+set beep_new=yes                        # beep on new messages
+
+set charset="utf-8"                     # character set for your terminal
+
+set send_charset="utf-8"
+
+set noconfirmappend                     # don't ask to append to mailboxes
+
+set confirmcreate                       # prompt when creating new files
+
+set copy=yes                            # always save a copy of outgoing 
+                                        # messages
+
+set date_format=%a\ %d\ %b\ %Y\ at\ %R  # Sun 1 Jan 2012 at 2115
+
+set delete=yes                          # purge deleted messages without 
+                                        # asking
+
+set edit_headers                        # let me edit the message headers 
+                                        # when composing
+
+set editor="emacs -nw"                  # editor to use
+
+set encode_from=yes                     # Q-P out lines beginning with "From "
+
+set fast_reply                          # skip initial prompts when replying
+
+set fcc_attach                          # keep attachments in copies of 
+                                        # sent messages
+
+#set force_name                         # fcc by recipient, create if 
+                                        # mailbox doesn't exist
+
+set followup_to=yes                     # Don't let replies go to me when I
+                                        # respond to a list
+
+set folder_format="  %2C| %f %* | Tagged: %t New: %N Last Modified: %D    "
+
+set forward_decode                      # weed and MIME decode forwarded 
+                                        # messages
+
+set forw_format="Fwd: %s"               # subject when forwarding messages
+
+set forward_quote                       # quote header & body of forwarded
+                                        # messages
+
+set hdrs=yes                            # include `my_hdr' lines
+
+set header=no                           # don't include original message 
+                                        # headers when replying
+
+set help                                # show the help lines
+
+set hide_thread_subject=no              # show me the subjects, even if
+                                        # they are equivalent to their
+                                        # parents
+
+#set history=20                         # number of lines of history to 
+                                        # remember
+set honor_followup_to
+
+set include=yes                         # always include messages when 
+                                        # replying
+
+set indent_string="> "                  # how to quote replied text
+
+#set index_format="%4C %Z %[!%y%m%d] %-17.17F (%3l) %s"
+set index_format="%4C %2M [%Z] %s %* [%D] %-26.26F" 
+
+#set locale="en_GB@euro"                # locale to use for printing time
+
+set mark_old=no                         # don't mark messages as old
+
+set mail_check=5                        # how often to poll for new mail
+                                        # (we're using offlineimap instead)
+
+set maildir_trash=no                    # messages will receice a maildir
+                                        # trash flag instead of being 
+                                        # unlinked
+
+set mask="^\.[a-zA-Z]"                   # we want to see all the dirs,
+                                        # except '.' '..' 'cur/' 'tmp/'
+                                        # and 'new/'
+
+set mbox_type=Maildir                   # this dir must have tmp/, cur/, 
+                                        # and new/ subdirs
+
+set menu_scroll                         # no implicit next-page/prev-page
+
+### testing metoo to see if it helps me see replies I've made to multiple people:
+set metoo=yes                           # don't remove my address when replying
+
+#set mime_forward=ask-yes               # use message/rfc822 type to 
+                                        # forward messages
+
+set move=no                             # do not move read mails from 
+                                        # mailbox to $mbox
+
+#set pager=less                         # some people prefer an external 
+                                        # pager
+
+set pager_context=1                     # no. of lines of context to give 
+                                        # when scrolling
+
+#set pager_format="-%S- %-20.20f %s"    # format of the pager status bar
+set pager_format="%S [%C/%T] %n (%l) %s"
+
+set pager_index_lines=0                 # how many index lines to show in 
+                                        # the pager
+
+set pager_stop                          # don't move to the next message 
+                                        # on next-page
+
+#set pgp_strict_enc                     # use Q-P encoding when needed for 
+                                        # PGP
+
+#set post_indent_string='---end quoted text---'
+
+set print=ask-no                        # ask me if I really want to print
+
+set print_command=$HOME/scripts/sprunge # pastebin instead of printing 
+                                        # things (I like to save trees)
+
+set noprompt_after                      # don't ask me for a command after 
+                                        # the external pager exits
+
+set quote_regexp="^ *[a-zA-Z]*[]>|}%:=-][]>|}:=-]*"        # catch quoted
+
+set read_inc=10                         # show progress when reading a 
+                                        # mailbox
+
+set recall=ask-no                       # prompt to recall postponed 
+                                        # messages
+set reply_to=ask-yes
+
+set reply_regexp="^((aw|antw.?|antwort|re([\[0-9\]+])*|r e|r?f|sv):[ \t]*)*"
+
+#set resolve                            # move to the next message when 
+                                        # an action is performed
+
+set reverse_name=yes                    # build the From: line from the
+                                        # received address
+
+set save_empty=no                       # remove empty mailboxes
+
+set save_name=no                        # don't save outgoing messages by 
+                                        # recipient, just put them in 
+                                        # $record
+
+#set sendmail="/usr/sbin/sendmail -oi -oem"   # this one is the postfix
+                                              # standard
+set sendmail="/usr/bin/msmtp -C $HOME/.mailrc/msmtprc.tor"
+
+#set sendmail="sudo %?p?--passphrase-fd 0? socat -d -d -d -lu -lf $HOME/.mailrc/socat-msmtp.log -L $HOME/.mailrc/socat-msmtp-lockfile TCP4-LISTEN:2525,fork SOCKS4A:localhost:66.147.244.158:465,socksport=59050,socksuser=\"\" & /usr/bin/msmtp -a default"
+
+set shell="/bin/bash"                   # program to use for shell escapes
+
+set sidebar_visible                     # show the account folders sidebar
+
+set sidebar_width=45                    # sidebar width
+
+set sidebar_delim="|"                   # use a pipe to delimit the sidebar
+
+set sort=threads                        # primary sorting method
+
+#set sort_aux=reverse-date               # how to sort subthreads
+set sort_aux=reverse-last-date-received
+
+set sort_browser=alpha                  # how to sort files in the dir 
+                                        # browser
+
+set sort_re=no                          # make msg a child of thread if the
+                                        # non-$repy_regexp parts match
+
+set status_format="-%r-Mutt: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?  %l]---(%s)-%>-(%P)---"
+
+set status_on_top                       # status bar on top
+
+set strict_threads                      # set: use references: for 
+                                        # threading only, ie do not thread 
+                                        # by subject or in-reply-to
+
+set tilde                               # pad blank lines in the pager
+
+#set timeout=0                          # timeout for prompt in the index 
+                                        # menu
+
+set to_chars=" +TCFL"                   # 1) Not addressed to me
+                                        # 2) I am the only recipient of 
+                                        #    the message
+                                        # 3) In the 'To:' field, but not 
+                                        #    sole recipient  
+                                        # 4) In 'Cc:' header field, but 
+                                        #    not sole recipient
+                                        # 5) Sent by me
+                                        # 6) Message was sent to a 
+                                        #    mailing-list
+
+set use_domain=yes                      # qualify local addresses 
+                                        # with $hostname (which should be
+                                        # set on a per-mailbox basis)
+
+set user_agent=no                       # Do not send user-agent header
+
+#set visual=gvim                        # editor invoked by ~v in the 
+                                        # builtin editor
+
+set wait_key=no                         # don't prompt when a pipe returns 
+                                        # normal status
+
+#set write_inc=10                       # show progress while writing 
+                                        # mailboxes
+
+###########################################################################
+## Mailboxes to watch for new mail
+##       mailboxes <path1> [ <path2> ... ]
+###########################################################################
+## see $HOME/.mailrc/offlineimap-mailboxes
+
+## The following is a helper for Entended Maildir Formatted directory 
+## structures:
+#mailboxes ! + `\
+# for file in ~/.maildir/.*; do \
+#   box=$(basename "$file"); \
+#   if [ ! "$box" = '.' -a ! "$box" = '..' -a ! "$box" = '.customflags' \
+#       -a ! "$box" = '.subscriptions' ]; then \
+#     echo -n "\"+$box\" "; \
+#   fi; \
+#done; \
+# for folder in ~/.maildir/*; do \
+#   if [ -x $folder]; then \
+#         box=$(basename "$folder"); \
+#         for file in ~/.maildir/$box/.*; do \
+#                box2=$(basename "$file"); \
+#                if [ ! "$box2" = '.' -a ! "$box2" = '..' -a ! "$box2" = '.customflags' \
+#                 -a ! "$box2" = '.subscriptions' ]; then \
+#                   echo -n "\"+$box/$box2\" "; \
+#                fi; \
+#         done; \
+#    fi; \
+#  done`
+
+#################################################################################
+## Header viewing
+#################################################################################
+
+ignore *                                     # ignore all lines by default
+
+unignore from: subject: to: cc: mail-followup-to: sender: date:
+unignore priority: importance:               # Priorities should be heeded
+unignore user-agent: x-agent: x-mailer:      # see the user agent
+unignore x-newsreader: x-mailing-list:       # see the user agent
+unignore x-editor:                           # see the identification of the 
+                                             # used editor
+unignore message-id: newsgroups: posted-and-mailed:  # recognize CCs from Usenet
+unignore x-also-posted-to: posted-to:
+
+## This identifies mailing lists
+## see also: 'followup_to' and 'honor_followup_to'
+unignore mail-followup-to:
+
+## Recognize resent messages (usually lacking proper headers):
+## Example header lines:
+##   X-Resent-By: Global Message Exchange <forwarder@gmx.net>
+##   X-Resent-For: guckes@gmx.de
+##   X-Resent-To: guckes@math.fu-berlin.de
+unignore resent- x-resent
+
+## Display the delivery address:
+unignore delivered-to
+
+###########################################################################
+## User Defined Headers
+###########################################################################
+
+#my_hdr X-Useless-Header: Look ma, it's a \# sign!         # real comment
+#my_hdr X-Operating-System: `uname -a`
+
+my_hdr X-GPG-Public-Key-ID: 0x2CDB8B35
+my_hdr X-GPG-Public-Key-URL: www.patternsinthevoid.net/2CDB8B35.pub.asc
+
+###########################################################################
+# Header order to appear when displaying a message
+#       hdr_order <hdr1> [ <hdr2> ... ]
+###########################################################################
+
+unhdr_order *                               # forget the previous settings
+
+hdr_order Sender: From From: Subject: Date: Message-Id: User-Agent: \
+          X-Editor: X-Mailer: X-Newsreader: X-Agent: To: Cc: Newsgroups: \
+          X-Resent Followup-To: Mail-Followup-To: Reply-To:
+
+###########################################################################
+# Specify default filename when saving messages
+#       save-hook [!]<pattern> <mailbox>
+#
+# <mailbox> is provided as default when saving messages from <pattern>
+###########################################################################
+
+#save-hook mutt- =mutt-mail
+#save-hook aol\.com +spam
+#save-hook ^judge +diplomacy
+#save-hook * $HOME/.maildir/tmp/%T
+
+## see $HOME/.mailrc/muttrc-accounts-patterns-save-hooks
+
+###########################################################################
+## Multiple spool mailboxes
+##       mbox-hook [!]<pattern> <mbox-mailbox>
+##
+## Read mail in <pattern> is moved to <mbox-mailbox> when <pattern> is closed
+###########################################################################
+
+#mbox-hook =mutt-users.in =mutt-users
+#mbox-hook +TEST +inbox
+
+###########################################################################
+## Change settings based upon message recipient
+##       send-hook [!]<pattern> <command>
+##
+## <command> is executed when sending mail to an address matching <pattern>
+###########################################################################
+
+#send-hook mutt- 'set signature=~/.sigmutt;'
+
+send-hook .       'unmy_hdr X-Date'
+send-hook .       'unmy_hdr X-We-Are-Watching-You-Rubin'
+
+## LULZ!
+send-hook starset 'my_hdr X-We-Are-Watching-You-Rubin: That's right.'
+
+###########################################################################
+## Specify where to save composed messages
+##       fcc-hook [!]<pattern> <mailbox>
+##
+## <pattern> is recipient(s), <mailbox> is where to save a copy
+###########################################################################
+
+#fcc-hook scape@ml         =_fun/scape
+#fcc-hook moderateurs-frjv =_fun/frjv
+
+#fcc-hook vim              =_info/vim
+#fcc-hook cygwin           =_info/cygwin
+#fcc-hook mutt             =_info/mutt
+
+###########################################################################
+## Change settings based on mailbox
+##       folder-hook [!]<pattern> <command>
+##
+## <command> is executed when opening a mailbox matching <pattern>
+## typical <pattern> : "~t (name1\\|name2)@domain.cat"
+###########################################################################
+
+#send-hook     ^scape   'source $HOME/.mailrc/muttrc-hook-dest-scape'
+#folder-hook   ^scape   'source $HOME/.mailrc/muttrc-hook-dest-scape'
+
+#folder-hook . 'set sort=date-sent'
+#folder-hook mutt 'set hdr_format="%4C %Z %02m/%02N %-20.20F (%4l) %s"'
+
+# this mailing list prepends "[WM]" to all non reply subjects, so set
+# $reply_regexp to ignore it
+#folder-hook +wmaker 'set reply_regexp="^(re:[ \t]*)?\[WM\][ \t]*"'
+
+## Move messages to Trash when I press 'd', unless I'm in Trash, then
+## actually delete them:
+folder-hook !+.Trash    'macro index d "<save-message>+.Trash<enter>"'
+folder-hook !+.Trash    'macro pager d "<save-message>+.Trash<enter>"'
+folder-hook +.Trash     'macro index d "<delete-message>"'
+folder-hook +.Trash     'macro pager d "<delete-message>"'
+
+###########################################################################
+# Aliases
+#       alias <name> <address> [ , <address> ... ]
+#
+# alias_file  # The file to use for *saving* new aliases
+###########################################################################
+
+source ~/.mailrc/aliases_file
+
+set alias_file=$HOME/.mailrc/aliases_file
+set reverse_alias                  # attempt to display the names I've
+                                   # assigned to email addresses
+
+# Thanks to this, Mutt will ask alias to Abook when we hit Q
+set query_command="abook --mutt-query '%s'"
+
+###########################################################################
+# Identify mailing lists I subscribe to
+#       lists [ -group <name> ] <list-name> [ <list-name> ... ]
+###########################################################################
+
+lists -group hackbloc march-hare-dev Hackbloc-discuss hackthiszine Hb-core
+#subscribe -group hackbloc
+
+lists -group hackerspaces noisebridge-discuss noisebridge-rack hackerspaces hackupy-discuss
+#subscribe -group hackerspaces
+
+lists -group tor tor-talk tor-dev tor-assistants tor-weather tor2web-talk tor-commits tor-internal tor-announce
+#subscribe -group tor
+
+lists -group globaleaks team@globaleaks.org people@globaleaks.org
+#subscribe -group globaleaks
+
+lists -group graceless graceless@googlegroups.com
+#subscribe -group graceless
+
+lists -group tahoe-lafs tahoe-dev
+#subscribe -group tahoe-lafs
+
+subscribe hackbloc march-hare-dev Hackbloc-discuss hackthiszine Hb-core hackerspaces noisebridge-rack tor-talk tor-dev tor-assistants tor-weather tor2web-talk tor-internal tor-announce tahoe-dev
+
+###########################################################################
+# Automatically use entries from ~/.mailcap to view these MIME types
+#       auto_view <type> [ <type> ... ]
+###########################################################################
+
+set mailcap_path="$HOME/.mailrc/muttrc-mailcap:/usr/local/share/mailcap"
+#set implicit_autoview=yes           # always use a mailcap entry when found
+
+auto_view text/html
+
+#auto_view application/x-gunzip
+#auto_view application/x-gzip
+
+# Prefered order for choosing the MIME type to use.
+alternative_order text/plain text text/enriched
+
+###########################################################################
+# Scoring
+#       score <pattern> <value>
+#
+# 9999 and -9999 are special values which cause processing of hooks to stop
+# at that entry.  If you prefix the score with an equal sign (=), the score
+# is assigned to the message and processing stops.
+###########################################################################
+
+#score '~f ^me@cs\.hmc\.edu$' 1000
+#score '~t mutt | ~c mutt' =500
+#score '~f aol\.com$' -9999
+
+###########################################################################
+## "source":  This command tells mutt to
+## read other files as if they were another muttrc:
+###########################################################################
+
+source ~/.mailrc/muttrc-color
+source ~/.mailrc/muttrc-bindings
+source ~/.mailrc/muttrc-gpg-settings

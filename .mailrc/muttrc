@@ -270,7 +270,7 @@ set save_name=no                        # don't save outgoing messages by
 
 #set sendmail="/usr/sbin/sendmail -oi -oem"   # this one is the postfix
                                               # standard
-set sendmail="/usr/bin/msmtp"
+set sendmail="/usr/bin/msmtp -C $HOME/.mailrc/msmtprc"
 
 #set sendmail="sudo %?p?--passphrase-fd 0? socat -d -d -d -lu -lf $HOME/.mailrc/socat-msmtp.log -L $HOME/.mailrc/socat-msmtp-lockfile TCP4-LISTEN:2525,fork SOCKS4A:localhost:66.147.244.158:465,socksport=59050,socksuser=\"\" & /usr/bin/msmtp -a default"
 
