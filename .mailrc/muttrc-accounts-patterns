@@ -7,11 +7,18 @@
 ## These come directly from offlineimap, and are put into this file:
 source $HOME/.mailrc/muttrc-offlineimap-mailboxes
 
+## Add the mairix search result mailbox
+mailboxes "$HOME/.mailrc/mairix-searches/"
+
 ## We don't want anything to have a Message-ID of "user@localhost":
+set from="Isis <isis@patternsinthevoid.net"
+set realname="Isis Agora Lovecruft"
+my_hdr From: Isis <isis@patternsinthevoid.net>
 set hostname="patternsinthevoid.net"
 
 ## Manually set envelope address:
-set envelope_from_address=""
+set envelope_from_address="Isis <isis@patternsinthevoid.net>"
+set use_envelope_from=yes
 
 ## Main folder which '+' and '=' will expand to when specifying
 ## mailboxes (i.e. the folder '/me@mail.net/.listservs' becomes 
@@ -37,3 +44,8 @@ set tmpdir="$HOME/.maildir/isis@patternsinthevoid.net/tmp"
 
 ## Use my folder and messages settings for this account:
 source $HOME/.mailrc/muttrc-accounts-patterns-filters
+
+## 
+## Save Hooks
+## ----------
+source $HOME/.mailrc/muttrc-accounts-patterns-save-hooks
