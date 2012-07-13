@@ -1,0 +1,63 @@
+#!/bin/sh
+###############################################################################
+# start_daemon
+# ------------
+# Script to turn other scripts into daemons, using nice and ionice, so that
+# they play nicely with everything else, and can be better crontabbed.
+#
+# @authors Isis Agora Lovecruft, 0x2cdb8b35
+#          (this was taken largely from somewhere on the internets, but I 
+#           didn't write it down...sorry someone, I'll give you credit when I
+#           recall where I got this... :/ )
+# @date 14 June 2012
+# @version 0.1.0
+#______________________________________________________________________________
+# Changelog:
+# ----------
+# v0.1.0 Changed ionice_class option to '-l' instead of '-c' because ionice
+#        itself, rather than the daemon, would take arguments following, then
+#        fail silently.
+# v0.0.1 Taken from the internet somewhere, some offlineimap config howto.
+###############################################################################
+
+set -efu
+
+ionice_class=
+ionice_priority=
+nice=
+
+## getopts will parse for '-c' '-p' and '-n' and their following arguments
+## until it sees '--', which means "end of options".
+##
+## If you need to call a bashalias, do something like:
+## start_daemon -n19 -l2 -p7 run=`/usr/bin/ack -1 offlineimap ~/.bashrc | \
+##     awk -F'"' {'print $2'}`;$run
+
+while getopts l:p:n: f; do
+      case $f in
+      l) ionice_class=$OPTARG;;
+      p) ionice_priority=$OPTARG;;
+      n) nice=$OPTARG;;
+      *) exit 2;;
+      esac
+done
+shift $((OPTIND - 1))
+
+cmd=$*
+io=
+
+if pgrep -u "$(id -u)" -xf -- "$cmd" >/dev/null 2>&1; then
+   exit 0
+fi
+
+if type ionice >/dev/null 2>&1; then
+   [ -n "$ionice_class" ]    && { io=1; cmd="-c $ionice_class $cmd"; }
+   [ -n "$ionice_priority" ] && { io=1; cmd="-n $ionice_priority $cmd"; }
+   [ -n "$io" ] && cmd="ionice $cmd"
+fi
+
+if type nice >/dev/null 2>&1; then
+   [ -n "$nice" ] && cmd="nice -n $nice $cmd"
+fi
+
+exec $cmd
