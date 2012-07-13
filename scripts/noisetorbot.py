@@ -20,16 +20,19 @@
 
 import chardet
 import json
-from pprint import pformat
+import os
 import random
 import textwrap
 import time
 import sys
 
+from pprint import pformat, pprint
+
 try:
     from twisted.application import internet, service
     from twisted.internet import reactor, protocol
     from twisted.internet.defer import Deferred
+    from twisted.internet.error import DNSLookupError
     from twisted.internet.protocol import Protocol
     from twisted.internet.ssl import ClientContextFactory, Client
     from twisted.python import log
@@ -43,7 +46,7 @@ except:
 try:
     from BeautifulSoup import UnicodeDammit
 except:
-    print "Please install BeautifulSoup: https://crate.io/packages/BeautifulSoup/"
+    print "Install BeautifulSoup: https://crate.io/packages/BeautifulSoup/"
 
 try:
     import simplejson
@@ -52,11 +55,21 @@ except:
 
 
 class MessageLogger:
+    """
+    Keeps a log of actions and messages in the channel so we can work out 
+    problems later.
+    """
     def __init__(self, file):
         self.file = file
 
     def log(self, message):
-        timestamp = time.strftime("[%H:%M:%S]", time.localtime(time.time()))
+        """
+        Logs are kept in UTC, because fuck being fingerprinted on something
+        so trite as a timezone. If you want timestamps localized to the
+        server with the running instance of the bot, then change 'time.gmtime()'
+        to 'time.localtime()'.
+        """
+        timestamp = time.strftime("[%H:%M:%S]", time.gmtime(time.time()))
         self.file.write('%s %s\n' % (timestamp, message))
         self.file.flush()
 
@@ -65,15 +78,16 @@ class MessageLogger:
 
 class OnionooClientContextFactory(ClientContextFactory):
     """
-    Creates context for Agent to process SSL connections.
+    Creates a context for Agent, in order to process SSL connections.
     """
     def getContext(self, hostname, port):
         return ClientContextFactory.getContext(self)
 
-class NoisetorBot(irc.IRCClient):
+class NoiseTorBot(irc.IRCClient):
     """
+    I help people in IRC learn about Tor nodes!
     """
-    def __init__(self):
+    def __init__(self, nickname):
         self.nickname = "panopticon"
         self.lineRate = 1
         self.heartbeatInterval = 120
@@ -195,17 +209,16 @@ class NoisetorBot(irc.IRCClient):
                 self.remaining = 1024 * 100
 
             def dataReceived(self, bytes):
-                with open(".onionoo.json", "a") as onion:
-                    if self.remaining:
-                        data = bytes[:self.remaining]
-                        #cruft = json.dumps(data)
-                        #cruft = cruft.replace('\\"', '"').replace('\\n', ' ')
-                        onion.write(data)
-                        self.remaining -= len(data)
-                    else:
+                global onion
+                onion = bytearray()
+                if self.remaining:
+                    data = bytes[:self.remaining]
+                    onion.write(data)
+                    self.remaining -= len(data)
+                else:
                     ## kludgey, but we need it or else the file could stay open
                     ## while the deferred gets passed on...
-                        onion.__exit__(None, None, None)
+                    onion.__exit__(None, None, None)
 
             def connectionLost(self, reason):
                 print "Finished receiving JSON object: ", reason.getErrorMessage()
@@ -471,18 +484,19 @@ class NoisetorBot(irc.IRCClient):
         new_nick = params[0]
         log("%s is now known as %s" % (old_nick, new_nick))
 
-class NoisetorBotFactory(protocol.ClientFactory):
+class NoiseTorBotFactory(protocol.ClientFactory):
     """
-    An factory for NoisetorBots. A new protocol instance is created each time
+    An factory for NoiseTorBots. A new protocol instance is created each time
     a connection is made to the server.
     """    
-    def __init__(self, channel, filename):
+    def __init__(self, nickname, channel, filename):
+        self.nickname = nickname
         self.channel = channel
         self.filename = filename
         self.noisy = False
 
     def buildProtocol(self, addr):
-        p = NoisetorBot()
+        p = NoiseTorBot(nickname)
         p.factory = self
         return p
 
@@ -493,14 +507,30 @@ class NoisetorBotFactory(protocol.ClientFactory):
         connection.connect()
 
     def clientConnectionFailed(self, connector, reason):
-        print "connection failed:", reason
+        print "Connection failed: ", pprint(reason)
         reactor.stop()
     
 if __name__ == "__main__":
     log.startLogging(sys.stdout)
 
-    noiseBot = NoisetorBotFactory("#torstats", "noisetorbot.log")
-    reactor.connectTCP("irc.freenode.net", 6667, noiseBot)
+    nickname   = "0n10no0b0t"
+    server     = "irc.freenode.net"
+    port       = 6667
+    channel    = "#torstats"
+    irclogfile = str("torbot-" 
+                     + time.strftime("%Y-%m-%d", time.gmtime(time.time()))
+                     + ".log")
+
+    counter        = 0
+    while os.path.isfile(os.path.abspath(irclogfile)):
+        counter   += 1
+        irclogfile = irclogfile + "." + str(counter)
+                     
+
+    noiseBot = NoiseTorBotFactory(nickname, channel, irclogfile)
+
+    print "Connecting to %s:%s" % (server, port)
+    reactor.connectTCP(server, port, noiseBot)
     reactor.run()
 
 '''
