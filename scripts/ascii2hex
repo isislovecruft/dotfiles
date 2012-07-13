@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+################################################################################
+#
+# ascii2hex
+# ---------
+# Converts ascii to hexadecimal.
+#
+# @author Isis Agora Lovecruft, 0x2cdb8b35
+# @date 28 April 2012
+# @version 0.0.1
+#
+################################################################################
+
+import sys
+
+def toHex(s):
+    lst = []
+    for ch in s:
+        hv = hex(ord(ch)).replace('0x', '')
+        if len(hv) == 1:
+            hv = '0'+hv
+        lst.append(hv)
+    result = reduce(lambda x, y: x+y, lst)
+    return result
+
+if __name__=="__main__":
+    if not sys.argv[1]:
+        print "I need something to convert to hex.\n"
+    else:
+        print toHex(sys.argv[1])
