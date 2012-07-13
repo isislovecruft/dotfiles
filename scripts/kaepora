@@ -1,0 +1,52 @@
+#!/bin/bash
+###############################################################
+# kaepora (nice version)
+# ----------------------
+# Sends an email to @kaepora to say thanks for implementing 
+# MPOTR.  Requires 'fortune-mod', mutt as your configured mail 
+# client, a default install of python>=2.5 and some sort of MTA.
+#
+# @author Isis Agora Lovecruft, 0x2cdb8b35
+# @date 28 June 2012
+###############################################################
+
+. $HOME/.bashrc
+
+TO="nadim@nadim.cc"
+ALSO="isis@patternsinthevoid.net"
+
+FUTURE=`/usr/games/fortune -e science computers`
+FUTURE_FIRST=${FUTURE:0:1}
+FUTURE_LAST=${FUTURE:1}
+FUTURE="${FUTURE_FIRST,,}$FUTURE_LAST"
+FUTURE=${FUTURE%%?[-][-]*}
+
+set -- junk $FUTURE; shift
+
+if [[ "$#" -gt "10" ]] ; then  
+    SUBJECT="Because you implemented mpOTR, "`/bin/echo ${@:1:10}`"..."
+    shift 10
+    BODY="...""$@
+
+"
+else
+    SUBJECT="Because you implemented mpOTR, $@"
+fi
+
+BODY_SCRIPT=$HOME/scripts/geo-kaepora
+
+if [[ -z $BODY_SCRIPT ]] ; then
+    if [[ -z $HOME/.geo-kaepora ]] ; then
+        wget -O $HOME/.geo-kaepora http://www.patternsinthevoid.net/geo-kaepora
+        chmod +x $HOME/.geo-kaepora
+    fi
+    BODY_SCRIPT=$HOME/.geo-kaepora
+fi
+
+BODY="$BODY"`$BODY_SCRIPT`"
+"
+
+echo "${BODY}" | mutt -s "${SUBJECT}" ${TO}
+
+## Just to be fair this time...
+echo "${BODY}" | mutt -s "${SUBJECT}" ${ALSO}

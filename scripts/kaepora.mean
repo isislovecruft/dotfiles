@@ -1,0 +1,44 @@
+#!/bin/bash
+###############################################################
+# kaepora
+# -------
+# Sends an email to @kaepora about implementing MPOTR.  
+# Requires 'dict' and 'fortune-mod', mutt as your configured 
+# mail client, and some sort of MTA.
+#
+# @author Isis Agora Lovecruft, 0x2cdb8b35
+# @date 11 June 2012
+###############################################################
+
+. ~/.bashrc
+
+TO="nadim@nadim.cc"
+
+FUTURE=`/usr/games/fortune`
+FUTURE_FIRST=${FUTURE:0:1}
+FUTURE_LAST=${FUTURE:1}
+FUTURE="${FUTURE_FIRST,,}$FUTURE_LAST"
+FUTURE=${FUTURE%%?[-][-]*}
+
+set -- junk $FUTURE; shift
+
+if [[ "$#" -gt "10" ]] ; then  
+    SUBJECT="When you implement mpOTR, "`/bin/echo ${@:1:10}`"..."
+    shift 10
+    BODY="...""$@
+
+"
+else
+    SUBJECT="When you implement mpOTR, $@"
+fi
+
+BODY="$BODY
+"`/usr/bin/whoami`"@"`/bin/hostname`":~$ dict implement
+"`/usr/bin/dict implement`"
+
+"`/usr/bin/whoami`"@"`/bin/hostname`":~$ dict mpOTR
+"`/usr/bin/dict mpOTR 2>&1`"
+
+"
+
+echo "${BODY}" | mutt -s "${SUBJECT}" ${TO}
