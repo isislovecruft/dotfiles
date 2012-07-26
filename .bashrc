@@ -90,7 +90,7 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[34m\]\u\[\033[32m\]@\[\033[36m\]\h\[\033[32m\]:\[\033[32m\]\w\[\033[37m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[33m\]\u\[\033[32m\]@\[\033[36m\]\h\[\033[32m\]:\[\033[32m\]\w\$ \[\033[0m'
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -109,14 +109,38 @@ esac
 $HOME/scripts/bash_pretty_login.py
 
 ###############################################################################
+## Functions
+###############################################################################
+
+#function oonidev
+#{
+#    cd $HOME/dev/torproject/ooni-probe
+#    export PYTHONPATH=`pwd`
+#    . ~/.tmux.conf.layout01
+#}
+
+###############################################################################
 ## Environment & Paths
 ###############################################################################
+
+## gpg-agent config
+#######################
+if [ -f "$HOME/.gpg-agent-info" ]; then
+    . "$HOME/.gpg-agent-info"
+    export GPG_AGENT_INFO
+    ## We don't use the following
+    #export SSH_AUTH_SOCK
+fi
+
+GPG_TTY=$(tty)
+export GPG_TTY
 
 ## Environment variables
 ########################
 export TZ=UTC                              # Blue telephone box
+export LOCALTZ="America/Los_Angeles"
 export EDITOR="/usr/bin/emacs -nw"         # (Hopefully this doesn't) Uses X :(
-#export VISUAL=/usr/bin/emacs
+export VISUAL="/usr/bin/emacs -nw"
 export BROWSER=/usr/bin/firefox
 #export SSH_AUTH_SOCK=/tmp/ssh-agent
 #export SSH_AGENT_PID=$(pgrep ssh-agent)
@@ -207,6 +231,7 @@ alias removeslash="cpp -fpreprocessed"
 alias boilerpy="boilerplate.sh $HOME/scripts/boilerplate-python $1 "
 alias boilersh="boilerplate.sh $HOME/scripts/boilerplate-bash $1 "
 alias gitdate='. gitdate.sh'
+alias ipython='ipython --no-banner'
 ##
 ## Logs & Processes
 ###################
@@ -221,6 +246,7 @@ alias fwup="firewall.client.sh"
 alias fwdown="sudo iptables -F; sudo iptables -X; sudo iptables -A INPUT -j ACCEPT; sudo iptables -A FORWARD -j ACCEPT; sudo iptables -A OUTPUT -j ACCEPT"
 alias eip='ip_external.sh'
 alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
+alias whack="$HOME/scripts/whack"
 ## Moved to scripts/ so muttrc can call it:
 #alias sprunge="curl --socks4a 127.0.0.1:59050 -A 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0' -F 'sprunge=<-' http://sprunge.us"
 ##
@@ -233,7 +259,7 @@ alias muttor="coproc mailwithtor; mutt-patched -F $HOME/.mailrc/muttrc.tor"
 alias offlineimap="offlineimap -c /home/isis/.mailrc/offlineimaprc"
 alias torofflineimap="usewithtor offlineimap -c $HOME/.mailrc/offlineimaprc-tor"
 alias mairix="mairix -f $HOME/.mailrc/mairixrc"
-alias twitter="usewithtor ttytter | ccze -A"
+alias twitter="usewithtor ttytter -rc=$HOME/.ttytterrc | ccze -A"
 ##
 ## Fucking around
 #################
