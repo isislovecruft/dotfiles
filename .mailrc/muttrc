@@ -2,10 +2,11 @@
 #  .muttrc
 #
 #  @author Isis Lovecruft, 0x2cdb8b35
-#  @version 0.0.3
+#  @version 0.0.4
 #__________________________________________________________________________
 # 
 #  Changelog:
+#  v0.0.4: *Added automatic thread collapsing.
 #  v0.0.3: *Mairix for multiple maildir searches.
 #
 #  v0.0.2: *Now uses OfflineIMAP called with "$ usewithtor offlineimap"
@@ -124,6 +125,9 @@ set beep_new=yes                        # beep on new messages
 set charset="utf-8"                     # character set for your terminal
 
 set send_charset="utf-8"
+
+set collapse_unread=yes                 # collapse thread even if there are
+                                        # unread messages
 
 set noconfirmappend                     # don't ask to append to mailboxes
 
@@ -496,6 +500,7 @@ folder-hook !+.Trash    'macro index d "<save-message>+.Trash<enter>"'
 folder-hook !+.Trash    'macro pager d "<save-message>+.Trash<enter>"'
 folder-hook +.Trash     'macro index d "<delete-message>"'
 folder-hook +.Trash     'macro pager d "<delete-message>"'
+folder-hook . "push \eV"
 
 ###########################################################################
 # Aliases

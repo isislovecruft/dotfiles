@@ -1,1 +1,1 @@
-alternates ^isis@\\(patternsinthevoid\\.net|torproject\\.org\\)$
+alternates ^isis@\\(patternsinthevoid\\.net|torproject\\.org|globaleaks\\.org|hackbloc\\.org|riseup\\.net\\)$

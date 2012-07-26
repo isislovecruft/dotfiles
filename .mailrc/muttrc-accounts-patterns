@@ -5,20 +5,40 @@
 ## Mailboxes
 ## ---------
 ## These come directly from offlineimap, and are put into this file:
+
 source $HOME/.mailrc/muttrc-offlineimap-mailboxes
 
 ## Add the mairix search result mailbox
 mailboxes "$HOME/.mailrc/mairix-searches/"
 
+## for @torproject.org
+############################
+
 ## We don't want anything to have a Message-ID of "user@localhost":
-set from="Isis <isis@patternsinthevoid.net"
+set from="Isis <isis@torproject.org>"
 set realname="Isis Agora Lovecruft"
-my_hdr From: Isis <isis@patternsinthevoid.net>
+my_hdr From: Isis <isis@torproject.org>
+my_hdr Reply-To: Isis <isis@torproject.org>
 set hostname="patternsinthevoid.net"
 
 ## Manually set envelope address:
-set envelope_from_address="Isis <isis@patternsinthevoid.net>"
+set envelope_from_address="Isis <isis@torproject.org>"
 set use_envelope_from=yes
+
+## for @patternsinthevoid.net
+############################
+
+#set from="Isis <isis@patternsinthevoid.net>"
+#set realname="Isis Agora Lovecruft"
+#my_hdr From: Isis <isis@patternsinthevoid.net>
+#my_hdr Reply-To: Isis <isis@patternsinthevoid.net>
+set hostname="patternsinthevoid.net"
+
+## Manually set envelope address:
+#set envelope_from_address="Isis <isis@patternsinthevoid.net>"
+#set use_envelope_from=yes
+
+############################
 
 ## Main folder which '+' and '=' will expand to when specifying
 ## mailboxes (i.e. the folder '/me@mail.net/.listservs' becomes 

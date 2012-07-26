@@ -2,10 +2,11 @@
 #  .muttrc
 #
 #  @author Isis Lovecruft, 0x2cdb8b35
-#  @version 0.0.3
+#  @version 0.0.4
 #__________________________________________________________________________
 # 
 #  Changelog:
+#  v0.0.4: *Added automatic thread collapsing.
 #  v0.0.3: *Mairix for multiple maildir searches.
 #
 #  v0.0.2: *Now uses OfflineIMAP called with "$ usewithtor offlineimap"
@@ -124,6 +125,9 @@ set beep_new=yes                        # beep on new messages
 set charset="utf-8"                     # character set for your terminal
 
 set send_charset="utf-8"
+
+set collapse_unread=yes                 # collapse thread even if there are
+                                        # unread messages
 
 set noconfirmappend                     # don't ask to append to mailboxes
 
@@ -487,16 +491,13 @@ send-hook starset 'my_hdr X-We-Are-Watching-You-Rubin: That's right.'
 #folder-hook . 'set sort=date-sent'
 #folder-hook mutt 'set hdr_format="%4C %Z %02m/%02N %-20.20F (%4l) %s"'
 
-# this mailing list prepends "[WM]" to all non reply subjects, so set
-# $reply_regexp to ignore it
-#folder-hook +wmaker 'set reply_regexp="^(re:[ \t]*)?\[WM\][ \t]*"'
-
 ## Move messages to Trash when I press 'd', unless I'm in Trash, then
 ## actually delete them:
 folder-hook !+.Trash    'macro index d "<save-message>+.Trash<enter>"'
 folder-hook !+.Trash    'macro pager d "<save-message>+.Trash<enter>"'
 folder-hook +.Trash     'macro index d "<delete-message>"'
 folder-hook +.Trash     'macro pager d "<delete-message>"'
+folder-hook . "push \eV"
 
 ###########################################################################
 # Aliases
@@ -520,22 +521,16 @@ set query_command="abook --mutt-query '%s'"
 ###########################################################################
 
 lists -group hackbloc march-hare-dev Hackbloc-discuss hackthiszine Hb-core
-#subscribe -group hackbloc
 
 lists -group hackerspaces noisebridge-discuss noisebridge-rack hackerspaces hackupy-discuss
-#subscribe -group hackerspaces
 
 lists -group tor tor-talk tor-dev tor-assistants tor-weather tor2web-talk tor-commits tor-internal tor-announce
-#subscribe -group tor
 
 lists -group globaleaks team@globaleaks.org people@globaleaks.org
-#subscribe -group globaleaks
 
 lists -group graceless graceless@googlegroups.com
-#subscribe -group graceless
 
 lists -group tahoe-lafs tahoe-dev
-#subscribe -group tahoe-lafs
 
 subscribe hackbloc march-hare-dev Hackbloc-discuss hackthiszine Hb-core hackerspaces noisebridge-rack tor-talk tor-dev tor-assistants tor-weather tor2web-talk tor-internal tor-announce tahoe-dev
 
