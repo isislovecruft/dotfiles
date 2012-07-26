@@ -1,0 +1,17 @@
+keyf="~/.ttytterkey"
+ssl=1
+dostream=1
+hold=1
+ansi=1
+colourdefault=cyan
+colourprompt=yellow
+colourme=yellow
+colourdm=blue
+colourreply=green
+coloursearch=green
+urlopen="usewithtor lynx -dump %U | more"
+avatar="usewithtor lynx -dump %U > ~/.ttytter.avatardump & ascii_art_maker.py -W 50 \"file:///home/isis/.ttytter.avatardump\" & rm ~/.ttytter.avatardump"
+#slowpost=5
+verify=1
+wrap=55
+autosplit=word
