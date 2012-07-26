@@ -1,0 +1,7 @@
+selectp -t 0
+splitw -h
+selectp -t 1
+splitw -v
+selectp -t 0
+select-layout 83e1,182x56,0,0{77x56,0,0[77x24,0,0,77x31,0,25],104x56,78,0}
+command-prompt "rename-window %%"
