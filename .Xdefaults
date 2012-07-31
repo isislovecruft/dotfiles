@@ -1,0 +1,33 @@
+Rxvt*fading: 5
+Rxvt*tintColor: black
+!Rxvt*shading: 180
+Rxvt*transparent: true
+Rxvt*background: #000000
+Rxvt*foreground: #bebebe
+Rxvt*saveLines: 10000
+!Rxvt*scrollBar_right: True
+Rxvt*scrollBar:False
+Rxvt*cursorBlink: False
+Rxvt*cursorUnderline: False
+Rxvt*pointerBlank: False
+!Rxvt*font: xft:terminus:size=12
+!Rxvt*font: x:Droid Sans Mono:size=10
+Rxvt*font: xft:terminus:size=10
+Rxvt*urgentOnBell:True
+Rxvt*termName: xterm
+*color0: #000000
+*color1: #9e1828
+*color2: #aece92
+*color3: #968a38
+*color4: #0000a8
+*color5: #963c59
+*color6: #418179
+*color7: #bebebe
+*color8: #666666
+*color9: #cf6171
+*color10: #c5f779
+*color11: #fff796
+*color12: #4186be
+*color13: #cf9ebe
+*color14: #71bebe
+*color15: #ffffff

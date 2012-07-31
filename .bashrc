@@ -109,17 +109,6 @@ esac
 $HOME/scripts/bash_pretty_login.py
 
 ###############################################################################
-## Functions
-###############################################################################
-
-#function oonidev
-#{
-#    cd $HOME/dev/torproject/ooni-probe
-#    export PYTHONPATH=`pwd`
-#    . ~/.tmux.conf.layout01
-#}
-
-###############################################################################
 ## Environment & Paths
 ###############################################################################
 
@@ -138,9 +127,8 @@ export GPG_TTY
 ## Environment variables
 ########################
 export TZ=UTC                              # Blue telephone box
-export LOCALTZ="America/Los_Angeles"
 export EDITOR="/usr/bin/emacs -nw"         # (Hopefully this doesn't) Uses X :(
-export VISUAL="/usr/bin/emacs -nw"
+#export VISUAL=/usr/bin/emacs
 export BROWSER=/usr/bin/firefox
 #export SSH_AUTH_SOCK=/tmp/ssh-agent
 #export SSH_AGENT_PID=$(pgrep ssh-agent)
@@ -152,6 +140,10 @@ export PATH=$PATH:$HOME/scripts                  ## Export path to scripts dir
 export PATH=$PATH:$HOME/dev/git-hg/bin           ## Export path to git-hg
 export PATH=$PATH:/usr/local/go/bin              ## Export path for Go
 export PATH=$PATH:$HOME/dev/tahoe-lafs/bin/      ## Export path for Tahoe
+
+## Fix sudo? WTF?
+export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
+
 export NDKROOT=$HOME/dev/android/android-ndk-r7  ## Export path for android NDK
 
 ## Add export path for Android SDK platform-tools and tools:
@@ -246,7 +238,6 @@ alias fwup="firewall.client.sh"
 alias fwdown="sudo iptables -F; sudo iptables -X; sudo iptables -A INPUT -j ACCEPT; sudo iptables -A FORWARD -j ACCEPT; sudo iptables -A OUTPUT -j ACCEPT"
 alias eip='ip_external.sh'
 alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
-alias whack="$HOME/scripts/whack"
 ## Moved to scripts/ so muttrc can call it:
 #alias sprunge="curl --socks4a 127.0.0.1:59050 -A 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0' -F 'sprunge=<-' http://sprunge.us"
 ##
@@ -259,7 +250,7 @@ alias muttor="coproc mailwithtor; mutt-patched -F $HOME/.mailrc/muttrc.tor"
 alias offlineimap="offlineimap -c /home/isis/.mailrc/offlineimaprc"
 alias torofflineimap="usewithtor offlineimap -c $HOME/.mailrc/offlineimaprc-tor"
 alias mairix="mairix -f $HOME/.mailrc/mairixrc"
-alias twitter="usewithtor ttytter -rc=$HOME/.ttytterrc | ccze -A"
+alias twitter="usewithtor ttytter | ccze -A"
 ##
 ## Fucking around
 #################

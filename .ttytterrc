@@ -1,17 +1,48 @@
-keyf="~/.ttytterkey"
-ssl=1
+#authtype=oauth
+## val keyf -> '$HOME/.ttytterrc' + keyf
+keyf=
+#ssl=1
+#shorturl="http://tinyarro.ws/api-create.php?host=xn--bih.ws&utfpure=1&suggest=x&url="
+
+## i don't want to press F5
 dostream=1
-hold=1
+## not needed in streaming mode
+#mentions=1
+## lynx doesn't like OAuth or streaming APIs...
+#curl=/usr/bin/curl
+
+## disable asynchronous callback when tweets overflow text wrapper
+hold=1 
+wrap=70
+autosplit=word
+readline=1
+#backload=20
+#searchhits=40
+
+## ANSI like wut
 ansi=1
+
+## Display values:
+#vcheck=0
 colourdefault=cyan
+colourwarn=red
 colourprompt=yellow
 colourme=yellow
 colourdm=blue
 colourreply=green
 coloursearch=green
-urlopen="usewithtor lynx -dump %U | more"
-avatar="usewithtor lynx -dump %U > ~/.ttytter.avatardump & ascii_art_maker.py -W 50 \"file:///home/isis/.ttytter.avatardump\" & rm ~/.ttytter.avatardump"
+## Breaks all of the things:
+#timestamp="%H:%M %d/%m"
+
+## I here lynx doesn't play nicely with OAuth...
+## We might have to change these.
+
+#urlopen="usewithtor lynx -dump %U | more"
+#avatar="usewithtor lynx -dump %U > ~/.ttytter.avatardump & ascii_art_maker.py -W 50 \"file:///home/isis/.ttytter.avatardump\" & rm ~/.ttytter.avatardump"
+
+urlopen="usewithtor w3m -dump -cols 80 -S %U | more"
+avatar="usewithtor curl -s %U | convert - -colorspace Gray -colors 16 -antialias ppm:- | ppmascii -x2 -photo -winx=4"
+
+## Verify that we want to tweet something, rather than waiting to cancel
 #slowpost=5
 verify=1
-wrap=55
-autosplit=word
