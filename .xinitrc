@@ -1,17 +1,17 @@
 #!/bin/sh
 
 ## Reverse the bg and fg colours, default is bg=white fg=black:
-xsetroot -rv
+#xsetroot -rv
 #xsetroot -solid black
-xsetroot -cursor_name top_left_arrow
+#xsetroot -cursor_name top_left_arrow
 
-xset s off
+#xset s off
 
-xset dpms 300 600 600
+#xset dpms 300 600 600
 
 xmodmap $HOME/.Xmodmap
 
-xrdb -load $HOME/.Xdefaults
+#xrdb -load $HOME/.Xdefaults
 
 ivman &
 
