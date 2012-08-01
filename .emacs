@@ -77,9 +77,18 @@
 (add-hook 'cc-mode-hook 'my-indent-setup) ; NOTE: maybe 'java-mode-hook
 
 ;;
-;; Colours
-;;;;;;;;;;;;;;;;;;;;;;;
+;; Colours & Keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Prompt for a line and go to it with Ctrl-x+g
+(global-set-key "\C-xg" 'goto-line)
+
+
+;; LET ME USE ALL CAPS ON SELECTIONS, DAMMIT.
+;; I LIKE YELLING IN MY CODE COMMENTS!
 (put 'upcase-region 'disabled nil)
+
+;; Customizations
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -106,9 +115,9 @@
  '(italic ((((supports :underline t)) (:underline t :slant italic))))
  '(lazy-highlight ((((class color) (min-colors 8)) (:background "yellow" :foreground "black"))))
  '(match ((((class color) (min-colors 8) (background dark)) (:background "blue" :foreground "grey8"))))
- '(menu ((((type tty)) (:background "green" :foreground "black" :weight extra-bold))))
- '(mode-line ((t (:background "green" :foreground "black" :weight extra-bold))))
- '(mode-line-buffer-id ((t (:foreground "black" :weight ultra-bold))))
+ '(menu ((((type tty)) (:background "green" :foreground "black"))))
+ '(mode-line ((t (:background "green" :foreground "black"))))
+ '(mode-line-buffer-id ((t (:foreground "red"))))
  '(mode-line-highlight ((t (:inherit highlight))))
  '(mode-line-inactive ((default (:inherit mode-line)) (nil nil)))
  '(popup-isearch-match ((t (:background "sky blue" :foreground "black"))))
@@ -190,9 +199,6 @@
 ;(when (and (not window-system)
 ;           (fboundp 'menu-bar-mode))
 ;  (menu-bar-mode 0))
-
-;; Prompt for a line and go to it with Ctrl-x+g
-(global-set-key "\C-xg" 'goto-line)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python Autocompletion

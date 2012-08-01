@@ -58,8 +58,8 @@ theme.titlebar_bg_normal = "#3F3F3F"
 --theme.border_widget    = "#3F3F3F"
 -- }}}
 
-theme.info = theme.dir .. "icons/info.png"
-theme.pacman = theme.dir .. "icons/pacman.png"
+theme.info = theme.dir .. "icon/info.png"
+theme.pacman = theme.dir .. "icon/pacman.png"
 
 -- {{{ Mouse finder
 theme.mouse_finder_color = "#CC9393"

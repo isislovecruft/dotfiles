@@ -29,7 +29,8 @@ function usage
     echo "-t, --time              Display the local time (24-hour)"
     echo "-w, --weekday           Display the local weekday (long)"
     echo "-d, --date              Display the local date (day/month)"
-    echo "-a, --all               Display full local date"
+    echo "-x, --tmux              Display full local date for tmux"
+    echo "-c, --clock             Display full local date for clock"
     echo "-h, --help              Show this cruft"; echo;
     echo "Examples:"
     echo "    \$ utcdammit -l \"America/Los_Angeles\" -t"
@@ -53,7 +54,7 @@ function setup
         fi
     fi
 
-    if [ -n "$LOCALTZ" ] ; then
+    if test -z "$LOCALTZ" ; then
         LOCALTZ=$_LOCALTZ_
         export LOCALTZ
     fi
@@ -61,34 +62,40 @@ function setup
 
 function fluxcapacitor
 {
-    if [ -n "$LOCALTZ" ] ; then
-        echo "Error: No local tz!"; echo;
+    if [[ "$LOCALTZ" == "" ]] || [[ "$LOCALTZ" == "$TZ" ]] ; then
+        echo "Error: No local timezone!"; echo;
         exit 1
     else
-        export LOCALTZ
+        if test -n "$LOCALTZ" && test -z "$LOCALTIMEDAMMIT" ; then
+            echo "There was a problem setting the local time..."; echo;
+            exit 1
+        fi
     fi
 }
 
 function timewarp
 {
-    if [[ "$TZ" -eq "UTC" ]]; then
-        LOCALTIMEDAMMIT=`TZ=$LOCALTZ date +%H:%M%_4Z`
-        LOCALWEEKDAYDAMMIT=`TZ=$LOCALTZ date +%A`
-        LOCALDATEDAMMIT=`TZ=$LOCALTZ date +%d/%m`
-        LOCALTZDAMMIT="$LOCALTIMEDAMMIT $LOCALWEEKDAYDAMMIT $LOCALDATEDAMMIT"
+    if test -n $LOCALTZ ; then
+        if [[ "$TZ" != "$LOCALTZ" ]]; then
+            LOCALTIMEDAMMIT=`TZ=$LOCALTZ date +%H:%M%_4Z`
+            LOCALTIMESHORT=`TZ=$LOCALTZ date +%H:%M`
+            LOCALWEEKDAYDAMMIT=`TZ=$LOCALTZ date +%A`
+            LOCALDATE=`TZ=$LOCALTZ date +%d`
+            LOCALDATESHORT=`TZ=$LOCALTZ date +%d/%m`
+            LOCALMONTH=`TZ=$LOCALTZ date +%B`
+            LOCALTZDAMMIT_TMUX="$LOCALTIMEDAMMIT $LOCALWEEKDAYDAMMIT $LOCALDATESHORT"
+            LOCALTZDAMMIT_FULL="$LOCALWEEKDAYDAMMIT $LOCALDATE $LOCALMONTH"", ""$LOCALTIMESHORT"
 
-        export LOCALTIMEDAMMIT
-        export LOCALWEEKDAYDAMMIT
-        export LOCALDATEDAMMIT
-        export LOCALTZDAMMIT
-    fi
-}
-
-function check
-{
-    if [[ "$LOCALTZDAMMIT" == "" ]]; then
-        echo "There was a problem setting the local time zone..."; echo;
-        exit 1
+            export LOCALTIMEDAMMIT
+            export LOCALWEEKDAYDAMMIT
+            export LOCALDATE
+            export LOCALDATESHORT
+            export LOCALMONTH
+            export LOCALTZDAMMIT_TMUX
+            export LOCALTZDAMMIT_FULL
+        else 
+            echo "If you're trying to obscure your timezone, then why is your system clock set to the same timezone as your local one?"
+        fi
     fi
 }
 
@@ -106,24 +113,28 @@ while [ "$1" != "" ]; do
                               #ARE_WE_EVEN=$(expr $# / 2)
                               #echo "$ARE_WE_EVEN"
                               shift
-                              LOCALTZ=$1
+                              export LOCALTZ=$1
                               fluxcapacitor
                               ;;
         -t | --time )         timewarp
-                              check
+                              fluxcapacitor
                               echo "$LOCALTIMEDAMMIT"
                               ;;
         -w | --weekday )      timewarp
-                              check
+                              fluxcapacitor
                               echo "$LOCALWEEKDAYDAMMIT"
                               ;;
         -d | --date )         timewarp
-                              check
-                              echo "$LOCALDATEDAMMIT"
+                              fluxcapacitor
+                              echo "$LOCALDATESHORT"
                               ;;
-        -a | --all )          timewarp
-                              check
-                              echo "$LOCALTZDAMMIT"
+        -x | --tmux )         timewarp
+                              fluxcapacitor
+                              echo "$LOCALTZDAMMIT_TMUX"
+                              ;;
+        -c | --clock )        timewarp
+                              fluxcapacitor
+                              echo "$LOCALTZDAMMIT_FULL"
                               ;;
         -h | --help )         usage
                               exit -1

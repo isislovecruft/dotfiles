@@ -6,13 +6,15 @@ require("awful.rules")
 require("beautiful")
 -- Notification library
 require("naughty")
-
--- Not sure if these are needed?
--- require("wicked")
--- require('invaders')
+-- Bash scripting library
+require("bashets")
 
 -- Load Debian menu entries
 require("debian.menu")
+
+-- User Libraries
+require("vicious") 
+require("helpers")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -44,17 +46,12 @@ end
 -- Themes define colours, icons, and wallpapers
 beautiful.init("/home/isis/.config/awesome/themes/isis/theme.lua")
 
--- This is used later as the default terminal and editor to run.
---terminal = "x-terminal-emulator"
-terminal = "rxvtc"
+terminal = "urxvt"
 editor = os.getenv("EDITOR") or "emacs"
 editor_cmd = terminal .. " -e " .. editor
 
 -- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
+--altkey = "Mod1"
 modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
@@ -83,26 +80,43 @@ for s = 1, screen.count() do
     tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
 end
 
-apptags = 
-{
+apptags = {
         ["Firefox"] = { screen = 1, tag = 2 }
-}
+          }
 -- }}}
 
 -- {{{ Menu
+
+--function quit_with_bashets()
+--    while datewidget do
+--        bashets.stop()
+--        awesome.quit()
+--    end
+--end
+--
+--function restart_with_bashets()
+--    while datewidget do
+--        bashets.stop()
+--        awesome.restart()
+--    end
+--end
+
 -- Create a laucher widget and a main menu
 myawesomemenu = {
-   { "manual", terminal .. " -e man awesome" },
+   { "manual", terminal .. " -e man awesome", beautiful.info },
    { "edit config", editor_cmd .. " " .. awesome.conffile },
-   { "restart", awesome.restart },
-   { "quit", awesome.quit }
+--   { "restart awesome", restart_with_bashets },
+--   { "kill awesome", quit_with_bashets }
+   { "restart awesome", awesome.restart },
+   { "kill awesome", awesome.quit }
 }
 
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "debian", debian.menu.Debian_menu.Debian },
-                                    { "open terminal", terminal },
-                                    { "shutdown", terminal .. " -e poweroff" },
-                                    { "reboot", terminal .. " -e reboot" }
+mymainmenu = awful.menu({ items = { 
+           { "awesome", myawesomemenu, beautiful.awesome_icon },
+           { "debian", debian.menu.Debian_menu.Debian },
+           { "open terminal", terminal, image(beautiful.pacman) },
+           { "reboot", terminal .. " -e sudo shutdown -r -f -i now" },
+           { "shutdown", terminal .. " -e sudo shutdown -i -p now" }
                                   }
                         })
 
@@ -112,7 +126,19 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock({ align = "right" })
+datewidget = awful.widget.textclock({ align = "right" })
+
+--date_format = "%A %d %B %k:%M"
+--dateicon = widget({ type = "imagebox" })
+--dateicon.image = image(beautiful.widget_date)
+--datewidget = widget({ type = "textbox" })
+--vicious.register(datewidget, vicious.widgets.date, date_format, 61)
+
+--datewidget = widget({ type = "textbox" })
+--datewidget.width = 40
+--bashets.register("utcdammit.sh -c", { widget = datewidget, 
+--                                   separator = "",
+--                                   update_time = 2 })
 
 -- Create a systray
 mysystray = widget({ type = "systray" })
@@ -192,7 +218,7 @@ for s = 1, screen.count() do
             layout = awful.widget.layout.horizontal.leftright
         },
         mylayoutbox[s],
-        mytextclock,
+        datewidget,
         s == 1 and mysystray or nil,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
@@ -345,16 +371,18 @@ awful.rules.rules = {
                      border_color = beautiful.border_normal,
                      focus = true,
                      keys = clientkeys,
-                     buttons = clientbuttons } },
+                     buttons = clientbuttons,
+                     opacity = 0.8 } },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
+    { rule = { class = "Firefox" },
+      properties = { tag = tags[1][2] } },
+    { rule = { class = "URxvt" },
+      properties = { opacity = 0.8 } }
 }
 -- }}}
 
@@ -363,6 +391,27 @@ awful.rules.rules = {
 client.add_signal("manage", function (c, startup)
     -- Add a titlebar
     -- awful.titlebar.add(c, { modkey = modkey })
+
+    -- Add a titlebar to floaters, but remove those from rule callback
+    -- This shit does not work. Let's map titlebar.add() to Mod4-b like
+    -- we used to...
+
+    --if awful.client.floating.get(c)
+    --or awful.layout.get(c.screen) == awful.layout.suit.floating then
+    --    awful.titlebar.add(c, { modkey = modkey })
+    --else    
+    --    if c.titlebar then
+    --        awful.titlebar.remove(c)
+    --    end
+    --end
+
+    if awful.client.floating.get(c) then
+        awful.titlebar.add(c, { modkey = modkey })
+    else
+        if c.titlebar then
+            awful.titlebar.remove(c)
+        end
+    end
 
     -- Enable sloppy focus
     c:add_signal("mouse::enter", function(c)
@@ -375,7 +424,7 @@ client.add_signal("manage", function (c, startup)
     if not startup then
         -- Set the windows at the slave,
         -- i.e. put it at the end of others instead of setting it master.
-        -- awful.client.setslave(c)
+        awful.client.setslave(c)
 
         -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
@@ -388,3 +437,7 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+bashets.start()
+awful.util.spawn_with_shell("xcompmgr -cfF &")
+require_safe("autorun")
