@@ -9,14 +9,19 @@
 
 #xset dpms 300 600 600
 
-xmodmap $HOME/.Xmodmap
+xmodmap $HOME/.xmodmaprc
 
+## Moved to ~/.config/awesome/autostart.lua:
 #xrdb -load $HOME/.Xdefaults
 
-ivman &
+## Qu'est-que fuck?
+#ivman &
 
-## Better than Bourne, but we should switch to fish...
-#export SHELL=/bin/bash
+## we should switch to fish...
+export SHELL=/bin/bash
+
+## stupid keyboard
+#[ -f ~/.xmodmaprc ] && xmodmap ~/.xmodmaprc
 
 ## Start autocutsel so that we have a $CLIPBOARD:
 autocutsel -fork &

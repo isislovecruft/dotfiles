@@ -292,6 +292,7 @@ alias twitter="usewithtor ttytter | ccze -A"
 alias hieroglyph="echo -e \"\033(0\""
 alias pytebeat="aoss $HOME/dev/pytebeat/pytebeat.py"
 alias hyde='$HOME/dev/web/hyde/hyde.py'
+alias music='mocp -m $HOME/music -T $HOME/.moc/darkdot_theme -R ALSA'
 
 ##############################################################################
 

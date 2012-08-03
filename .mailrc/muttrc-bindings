@@ -10,11 +10,11 @@
 ################BROWSER         DIRECTORY BROWSER
 ################COMPOSE         COMPOSE MENU
 
-  bind index <Home>             sidebar-prev
-  bind index <End>              sidebar-next
+  bind index <PageUp>             sidebar-prev
+  bind index <PageDown>              sidebar-next
   bind index <Insert>           sidebar-open
-  bind index \C<Home>           sidebar-scroll-up
-  bind index \C<End>            sidebar-scroll-down
+  bind index \C<PageUp>           sidebar-scroll-up
+  bind index \C<PageDown>            sidebar-scroll-down
 
 ################INDEX           MESSAGE INDEX
 
@@ -41,14 +41,14 @@
   bind index   \t               next-unread
   bind index   ,\t              previous-unread
 
-  bind index   <Home>           sidebar-prev
-  bind index   <End>            sidebar-next
+  bind index   <PageUp>           sidebar-prev
+  bind index   <PageDown>            sidebar-next
   bind index   <Insert>         sidebar-open
-  bind index   \C<Home>         sidebar-scroll-up
-  bind index   \C<End>          sidebar-scroll-down
+  bind index   \C<PageUp>         sidebar-scroll-up
+  bind index   \C<PageDown>          sidebar-scroll-down
 
-#  bind index   <F2>             what-key
-  bind index   \Cx               sync-mailbox
+  bind index   z             what-key
+  #bind index   \Cx               sync-mailbox
 
   macro index  c "<change-folder>?<toggle-mailboxes>" "Open a different folder"
   macro index  C "<copy-message>?<toggle-mailboxes>" "Copy a message to a mailbox"
@@ -72,12 +72,6 @@
 
   macro generic  ,/ "<shell-escape>mairix -f $HOME/.mailrc/mairixrc " "search all mailboxes with mairix"
 
-  bind pager <Home>      sidebar-prev
-  bind pager <End>       sidebar-next
-  bind pager <Home>\C    sidebar-scroll-up
-  bind pager <End>\C     sidebar-scroll-down
-  bind pager <Insert>    sidebar-open
-
 ################EDITOR          LINE EDITOR
 
 #  The usual DEL vs BS problem:
@@ -85,10 +79,10 @@
 
 ################pager           text viewer
 
-  bind pager <Home>      sidebar-prev
-  bind pager <End>       sidebar-next
-  bind pager <Home>\C    sidebar-scroll-up
-  bind pager <End>\C     sidebar-scroll-down
+  bind pager <PageUp>      sidebar-prev
+  bind pager <PageDown>       sidebar-next
+  bind pager <PageUp>\C    sidebar-scroll-up
+  bind pager <PageDown>\C     sidebar-scroll-down
   bind pager <Insert>    sidebar-open
 
   bind pager <Down>      next-line

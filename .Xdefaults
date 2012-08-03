@@ -12,7 +12,7 @@ Rxvt*cursorUnderline: False
 Rxvt*pointerBlank: False
 !Rxvt*font: xft:terminus:size=12
 !Rxvt*font: x:Droid Sans Mono:size=10
-Rxvt*font: xft:terminus:size=10
+Rxvt*font: xft:terminus:size=9
 Rxvt*urgentOnBell:True
 Rxvt*termName: xterm
 *color0: #000000
