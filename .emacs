@@ -13,6 +13,9 @@
 (add-to-list 'load-path "~/.emacs.d/vendor")
 (progn (cd "~/.emacs.d/vendor")
        (normal-top-level-add-subdirs-to-load-path))
+(add-to-list 'load-path "/usr/share/pyshared")
+(progn (cd "/usr/share/pyshared")
+       (normal-top-level-add-subdirs-to-load-path))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Four spaces, not tabs
@@ -222,6 +225,8 @@
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
+;; commented out for new optional ropemacs load function:
+
 ;; Initialize Pymacs                                
 (autoload 'pymacs-apply "pymacs")
 (autoload 'pymacs-call "pymacs")
@@ -229,10 +234,24 @@
 (autoload 'pymacs-exec "pymacs" nil t)
 (autoload 'pymacs-load "pymacs" nil t)
 
-;; Initialize Rope 
-                            
-(pymacs-load "ropemacs" "rope-")
-(setq ropemacs-enable-autoimport t)
+;;; Initialize Rope 
+;                            
+;(pymacs-load "ropemacs" "rope-")
+;(setq ropemacs-enable-autoimport t)
+
+;; Load Pymacs and Ropemacs only when needed:
+;; M-x load-ropemacs, or
+;; C-x p l
+(defun load-ropemacs ()
+  "Load pymacs and ropemacs"
+  (interactive)
+  (require 'pymacs)
+  (pymacs-load "ropemacs" "rope-")
+  ;; Automatically save project python buffers before refactorings
+  (setq ropemacs-confirm-saving 'nil)
+  ;; From above:
+  (setq ropemacs-enable-autoimport t))
+(global-set-key "\C-xpl" 'load-ropemacs)
 
 ;; Initialize Yasnippet   
 ;Don't map TAB to yasnippet 

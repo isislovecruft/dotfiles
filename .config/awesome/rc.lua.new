@@ -399,10 +399,12 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Firefox" },
       callback = awful.titlebar.add,
-      properties = { tag = tags[1][2],
-                     opacity = 0.75 } },
+      properties = { tag = tags[1][1],
+                     opacity = 0.85 } },
     { rule = { class = "URxvt" },
-      properties = { opacity = 0.8 } }
+      properties = { opacity = 0.8 } },
+    { rule = { class = "Pidgin" },
+      properties = { tag = tags[1][2] } }
 }
 -- }}}
 

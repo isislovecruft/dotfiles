@@ -281,9 +281,6 @@ sslcacertfile = ~/.mailrc/CA/AddTrust_External_Root.pem
 ## Fucking retarded, it needs to be like this:
 cert_fingerprint = f32c820c9317c1e3e244efc000208d7ca1988f99
 
-## This one is for 'blue_smtp.pem'
-#cert_fingerprint = 86:75:39:A2:6C:81:FA:2D:78:27:7C:3A:DF:DB:30:43:12:53:5E:57
-
 # Specify the port.  If not specified, use a default port.
 
 remoteport = 993

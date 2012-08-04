@@ -1,5 +1,5 @@
 #!/bin/sh
-###############################################################################
+##############################################################################
 # start_daemon
 # ------------
 # Script to turn other scripts into daemons, using nice and ionice, so that
@@ -11,22 +11,25 @@
 #           recall where I got this... :/ )
 # @date 14 June 2012
 # @version 0.1.0
-#______________________________________________________________________________
+#_____________________________________________________________________________
 # Changelog:
 # ----------
 # v0.1.0 Changed ionice_class option to '-l' instead of '-c' because ionice
 #        itself, rather than the daemon, would take arguments following, then
 #        fail silently.
 # v0.0.1 Taken from the internet somewhere, some offlineimap config howto.
-###############################################################################
+##############################################################################
 
 set -efu
 
+## Option: -l
 ionice_class=
+## Option: -p
 ionice_priority=
+## Option: -n
 nice=
 
-## getopts will parse for '-c' '-p' and '-n' and their following arguments
+## getopts will parse for '-l' '-p' and '-n' and their following arguments
 ## until it sees '--', which means "end of options".
 ##
 ## If you need to call a bashalias, do something like:

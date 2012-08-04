@@ -1,33 +1,56 @@
-!Rxvt*fading: 5
-Rxvt*tintColor: black
-!Rxvt*shading: 180
-Rxvt*transparent: true
-Rxvt*background: #000000
-Rxvt*foreground: #bebebe
-Rxvt*saveLines: 10000
-!Rxvt*scrollBar_right: True
-Rxvt*scrollBar:False
-Rxvt*cursorBlink: False
-Rxvt*cursorUnderline: False
-Rxvt*pointerBlank: False
-!Rxvt*font: xft:terminus:size=12
-!Rxvt*font: x:Droid Sans Mono:size=10
-Rxvt*font: xft:terminus:size=9
-Rxvt*urgentOnBell:True
-Rxvt*termName: xterm
+!URxvt*fading: 5
+!URxvt*fadeColor: black
+URxvt*tintColor: black
+!URxvt*shading: 180
+URxvt*transparent: true
+URxvt*background: #000000
+!Rxvt*foreground: #bebebe
+URxvt*foreground: #f3f4f1
+URxvt*saveLines: 10000
+URxvt*scrollBar:False
+URxvt*cursorBlink: False
+URxvt*cursorUnderline: False
+URxvt*pointerBlank: True
+URxvt*pointerBlankDelay: 20
+URxvt*modifier: alt
+!URxvt*font: xft:Dejavu Sans Mono:size=10
+URxvt*font: xft:terminus:size=9
+URxvt*letterSpace: 0
+URxvt*lineSpace: -1
+URxvt*urgentOnBell: True
+XTerm*urgentOnBell: True
+URxvt*visualBell: False
+XTerm*visualBell: False
+URxvt*termName: xterm
+! black
 *color0: #000000
+! used-tampon red
 *color1: #9e1828
-*color2: #aece92
+! awesome green
+*color2: #aad498
+! crustpunk brown
 *color3: #968a38
-*color4: #0000a8
+! nicotine blues
+*color4: #335899
+! hipster purple
 *color5: #963c59
+! cyannat
 *color6: #418179
-*color7: #bebebe
-*color8: #666666
-*color9: #cf6171
+! light grey
+*color7: #eeeeee
+! dark grey
+*color8: #808080
+! anthropogenesic desertification
+*color9: #335899
+! snot green
 *color10: #c5f779
-*color11: #fff796
+! suburban beige
+*color11: #ffdc85
+! hick-501s blue
 *color12: #4186be
+! old-lady pink
 *color13: #cf9ebe
+! nyancat
 *color14: #71bebe
+! pale horse
 *color15: #ffffff

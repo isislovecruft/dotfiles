@@ -136,7 +136,12 @@ export PATH=$PATH:$HOME/dev/tahoe-lafs/bin/      ## Export path for Tahoe
 ## Fix sudo? WTF?
 export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 
-export NDKROOT=$HOME/dev/android/android-ndk-r7  ## Export path for android NDK
+## PYTHON
+export PYTHONPATH=$PYTHONPATH:$HOME/dev/torproject/ooni-probe
+export PYTHONPATH=$PYTHONPATH:/usr/share/pyshared
+
+## Export path for android NDK
+export NDKROOT=$HOME/dev/android/android-ndk-r7
 
 ## Add export path for Android SDK platform-tools and tools:
 export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/tools
@@ -145,6 +150,7 @@ export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/platform-tools
 ## Export paths for common toolchains for android NDK
 ## Leave these commented out unless you're specifically cross-compiling 
 ## for ArmV7:
+
 #export AR=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ar
 #export LD=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ld
 #export CC=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-gcc

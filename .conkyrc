@@ -52,7 +52,7 @@ gap_y 40
 if_up_strictness address
 mail_spool /var/mail/isis
 maximum_width 1000
-minimum_size 90 800
+minimum_size 90 500
 net_avg_samples 2
 no_buffers no
 out_to_console no
@@ -84,12 +84,12 @@ TEXT
 $color$hr
 $color5  $nodename${alignr 3}$color1${tztime America/Los_Angeles %A, %d %B, %H:%M%_4Z}
 $color$hr$color1
-${if_running mocp}Now Playing: ${alignr 1}$color5${scroll 30 3 $moc_artist - $moc_song}
-$color$hr${endif}$color1
-Weather:${if_up wlan0}$color Temp: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO temperature 60}F$color Clouds: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO cloud_cover 60}$color Wind: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_speed 60}km/h ${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_dir 60}${else}$color not online${endif}
+#${if_running mocp}Now Playing: ${alignr 1}$color5${scroll 30 3 $moc_artist - $moc_song}
+#$color$hr${endif}$color1
+Weather:${if_up wlan0}$color Temp: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO temperature 120}F$color Clouds: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO cloud_cover 120}$color Wind: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_speed 120}km/h ${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_dir 120}${else}$color not online${endif}
 $color$hr$color1
 Uptime:$color $uptime$color1
-Battery: $color${battery_percent}% ${battery_time}$color1 ${alignr 1}Laptop Mode:$color ${if_match long${laptop_mode}>long0}enabled${else}disabled${endif}$color1
+Battery: $color${battery_percent}% ${battery_time}$color1 ${alignr 1}Laptop Mode:$color ${if_match ${laptop_mode}>0}enabled${else}disabled${endif}$color1
 Frequency (in MHz):$color $freq$color1
 RAM Usage:$color $mem/$memmax - $memperc% ${membar 4}$color1
 #Swap Usage:$color $swap/$swapmax - $swapperc% ${swapbar 4}$color1
