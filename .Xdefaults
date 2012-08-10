@@ -21,7 +21,28 @@ URxvt*urgentOnBell: True
 XTerm*urgentOnBell: True
 URxvt*visualBell: False
 XTerm*visualBell: False
-URxvt*termName: xterm
+! this one works:
+!URxvt*termName: xterm
+! but this one is better:
+URxvt*termName: screen-256color
+URxvt.perl-ext-common: default,matcher
+URxvt.urlLauncher: /usr/bin/firefox
+URxvt.matcherButton: 1
+! keysyms are becoming rarer by the stroke...
+! we have to avoid anything already mapped in awesome,
+! tmux, or emacs:
+!     awesome = most of the Mod4 keys
+!     tmux    = C-h/C-j/C-k
+!     emacs   = most of the C and M keys
+!Urxvt.keysym.C-Shift-l: perl:matcher:last
+!URxvt.keysym.C-l:       perl:matcher:list
+!yeahconsole*term: urxvt
+!yeahconsole*screenWidth:
+!yeahconsole*consoleHeight: 50
+!yeahconsole*toggleKey: F12
+!yeahconsole*keyBigger: Control+F11
+!yeahconsole*keySmaller: Control+F10
+!yeahconsole*keyFull: Control+Shift+F11
 ! black
 *color0: #000000
 ! used-tampon red

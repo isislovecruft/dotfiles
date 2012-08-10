@@ -140,6 +140,13 @@ export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 export PYTHONPATH=$PYTHONPATH:$HOME/dev/torproject/ooni-probe
 export PYTHONPATH=$PYTHONPATH:/usr/share/pyshared
 
+## PERL
+export PERL_LOCAL_LIB_ROOT="/home/isis/.perl5";
+export PERL_MB_OPT="--install_base /home/isis/.perl5";
+export PERL_MM_OPT="INSTALL_BASE=/home/isis/.perl5";
+export PERL5LIB="/home/isis/.perl5/lib/perl5/x86_64-linux-gnu-thread-multi:/home/isis/.perl5/lib/perl5";
+export PATH="/home/isis/.perl5/bin:$PATH";
+
 ## Export path for android NDK
 export NDKROOT=$HOME/dev/android/android-ndk-r7
 
@@ -261,6 +268,11 @@ alias fuck='sudo killall '
 alias damn='sudo kill -9 `pgrep $2` '
 
 ##
+## Drives
+###################
+alias chronophasia='sudo mount /dev/sdb1 /media/usb0 && truecrypt -t --mount=/media/usb0/Private -k "" --volume-type=normal --protect-hidden=no --protection-password="" /media/truecrypt1'
+
+##
 ## Networking
 #################
 
@@ -268,6 +280,7 @@ alias check='ping -c 3 google.com'
 alias fwup="firewall.client.sh"
 alias fwdown="sudo iptables -F; sudo iptables -X; sudo iptables -A INPUT -j ACCEPT; sudo iptables -A FORWARD -j ACCEPT; sudo iptables -A OUTPUT -j ACCEPT"
 alias fwcheck="sudo iptables -L"
+alias fwnew="cd /var/lib/fwsnort && sudo mv fwsnort.save fwsnort.old && sudo fwsnort -C \"ESTABLISHED,RELATED\" --ipt-sync && cd $PWD"
 alias eip='ip_external.sh'
 alias iip="sudo /sbin/ifconfig wlan0|grep inet|head -1|sed 's/\:/ /'|awk '{print $3}'"
 ## Moved to scripts/ so muttrc can call it:

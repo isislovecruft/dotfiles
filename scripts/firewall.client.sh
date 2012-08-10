@@ -5,12 +5,19 @@
 # For use on a Tor Client with an optional TransProxy'd anonymous user.
 #
 # @author Isis Lovecruft, 0x2cdb8b35
-# @version 0.0.4
+# @version 0.0.5
 # @license WTFPL
 #_____________________________________________________________________________
 #
 # Changelog:
 #
+# v0.0.5: Added a port knocker. To use, specify five ports: one through four
+#         must be hit with TCP packets in order, then port five opens for 
+#         five seconds. Use with:
+#         $ alias k='telnet $IPADDR_OR_HOSTNAME'
+#         $ k $PK_PORT1 ; k $PK_PORT2 ; k $PK_PORT3 ; k $PK_PORT4 ; \
+#         ssh $IPADDR_OR_HOSTNAME
+#         and then press C-c four times.
 # v0.0.4: Allow DHCP (even though it's a piece of shit). Added reverse path
 #         filter to disallow iface transversal. Changed license to "Do What
 #         The Fuck You Want Public Licence". Added better logs too.
@@ -40,7 +47,18 @@ TOR_TRANS_PORT="9040"
 TOR_DNS_PORT="5353"
 TRANSPROXY_USER=anon
 
-SSH=true
+PORTKNOCKER=true
+PORTKNOCKER_ALLOW_ALL=true
+PORTKNOCKER_ALLOW_HOST=""
+# 3141, 5926, 5358, 9793, 2384
+PK_PORT1="3141"
+PK_PORT2="5926"
+PK_PORT3="5358"
+PK_PORT4="9793"
+SSH_SERVER=true
+SSH_SERVER_PK_PORT="2384"
+
+SSH_CLIENT=true
 SSH_PORT="22"
 SSH_ALT_PORT="2222"
 MOSH=true
@@ -49,7 +67,7 @@ MOSH_PORTS="60000:61000"
 TAHOE=true
 TAHOE_PORT="3456"
 
-DHCP=true
+DHCP=false
 DHCP_PORT="67"
 DHCP_PORT2="68"
 
@@ -228,7 +246,7 @@ sudo iptables -A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
 sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 
-if $SSH ; then
+if $SSH_CLIENT ; then
     ## ALLOW SSH (AND MOSH!)
     if test -n "$SSH_PORT"; then
         sudo iptables -A INPUT -p tcp -m state --state ESTABLISHED,RELATED --dport $SSH_PORT -j ACCEPT
@@ -333,6 +351,49 @@ if $TRANSPROXY ; then
     ## DROP ALL OTHER TRAFFIC FOR USER ANONYMOUS:
         sudo iptables -t filter -A OUTPUT -m owner --uid-owner $TRANSPROXY_USER -j LOG --log-prefix "iptables: TransProxy: " --log-level 7
         sudo iptables -t filter -A OUTPUT -m owner --uid-owner $TRANSPROXY_USER -j DROP
+    fi
+fi
+
+##############################################################################
+## PORT KNOCKER
+##############################################################################
+
+if $PORTKNOCKER ; then
+    if [[ "$PK_PORT2" != "" ]] ; then
+        sudo iptables -N INTO-PHASE2
+        sudo iptables -A INTO-PHASE2 -m recent --name PHASE1 --remove
+        sudo iptables -A INTO-PHASE2 -m recent --name PHASE2 --set
+        sudo iptables -A INTO-PHASE2 -j LOG --log-prefix "INTO PHASE2: "
+    fi
+
+    if [[ "$PK_PORT3" != "" ]] ; then
+        sudo iptables -N INTO-PHASE3
+        sudo iptables -A INTO-PHASE3 -m recent --name PHASE2 --remove
+        sudo iptables -A INTO-PHASE3 -m recent --name PHASE3 --set
+        sudo iptables -A INTO-PHASE3 -j LOG --log-prefix "INTO PHASE3: "
+    fi
+    
+    if [[ "$PK_PORT4" != "" ]] ; then
+        sudo iptables -N INTO-PHASE4
+        sudo iptables -A INTO-PHASE4 -m recent --name PHASE3 --remove
+        sudo iptables -A INTO-PHASE4 -m recent --name PHASE4 --set
+        sudo iptables -A INTO-PHASE4 -j LOG --log-prefix "INTO PHASE4: "
+    fi
+    
+    sudo iptables -A INPUT -m recent --update --name PHASE1
+    sudo iptables -A INPUT -p tcp --dport $PK_PORT1 -m recent --set --name PHASE1
+    sudo iptables -A INPUT -p tcp --dport $PK_PORT2 -m recent --rcheck --name PHASE1 -j INTO-PHASE2
+    sudo iptables -A INPUT -p tcp --dport $PK_PORT3 -m recent --rcheck --name PHASE2 -j INTO-PHASE3
+    sudo iptables -A INPUT -p tcp --dport $PK_PORT4 -m recent --rcheck --name PHASE3 -j INTO-PHASE4
+
+    if $SSH_SERVER ; then
+        if $PORTKNOCKER_ALLOW_ALL ; then
+            sudo iptables -A INPUT -p tcp --dport $SSH_SERVER_PK_PORT -m recent --rcheck --seconds 5 --name PHASE4 -j ACCEPT
+        else
+            if [[ "$PORTKNOCKER_ALLOW_HOST" != "" ]] ; then
+                sudo iptables -A INPUT -p tcp -s $PORTKNOCKER_ALLOW_HOST --dport $SSH_SERVER_PK_PORT -m recent --rcheck --seconds 5 --name PHASE4 -j ACCEPT
+            fi
+        fi
     fi
 fi
 

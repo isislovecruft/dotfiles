@@ -30,6 +30,7 @@ cpu_avg_samples 2
 default_color 418179
 default_outline_color 9e1828
 default_shade_color 4186be
+double_buffer yes
 color0 418179
 color1 aece92
 color2 931828
@@ -51,8 +52,8 @@ gap_x 15
 gap_y 40
 if_up_strictness address
 mail_spool /var/mail/isis
-maximum_width 1000
-minimum_size 90 500
+maximum_width 800
+minimum_size 90 350
 net_avg_samples 2
 no_buffers no
 out_to_console no
@@ -61,6 +62,8 @@ extra_newline no
 own_window yes
 own_window_class Conky
 own_window_type desktop
+## UNCOMMENT TEMPORARILY TO RESIZE:
+#own_window_type default
 own_window_argb_visual yes
 own_window_argb_value 200
 short_units yes
@@ -75,19 +78,68 @@ uppercase no
 use_spacer left
 total_run_times 0
 
-template0 /home/isis/.maildir/isis@patternsinthevoid.net\1
-template1 $color5 ${new_mails ${template0\ /\1} 60}
-template2 $color ${seen_mails ${template0\ /\1} 60}
-template3 $color ${mails ${template0 /\1} 60} 
+###############
+## TEMPLATES ##
+###############
+
+## Maildir main directory (Add subdirectory maildir for a specific mailbox):
+template0 /home/isis/.maildir/isis@patternsinthevoid.net/\1
+
+## New 
+template1 $color5 ${new_mails ${template0\ \1} 60}
+## Seen
+template2 $color ${seen_mails ${template0\ \1} 60}
+## All
+template3 $color ${mails ${template0\ \1} 60} 
+
+## var1 = maildir folder
+## var2 = template number (1/2/3)
+## var3 = Is this "New:"/"Seen:"/"Total:"?
+template4 ${combine\ ${$color1\3}\ \ \ ${${alignr\ 3}${template\2\ \1}}
+
+## var1 = maildir folder
+## var2 = mailbox title or name (must escape spaces, i.e. "My\ Friends")
+## Example: ${template5 Tor-dev .Tor.tor-dev}
+template5 ${combine\ ${$color1\ \2}\ \ \ ${combine\ ${template4\ New:\ 1\ \1}\ \ \ ${combine\ ${template4\ Seen:\ 2\ \1}\ \ \ ${template4\ Total:\ 3\ \1}}}}
+
+## Weather
+
+## var1 = where, i.e. KSFO, KJFK
+## var2 = what
+## var3 = units
+## var4 = label
+template6 $color\ \4\ $color5${weather\ http://weather.noaa.gov/pub/data/observations/metar/stations/\ \1\ \2\ 120}\3} 
+
+## var1 = where
+## reports temp, weather, wind & wind direction
+template7 ${template6\ \1\ temperature\ F\ Temp:}${template6\ \1\ cloud_cover\ \ \ Clouds:}${template6\ \1\ wind_speed\ km/h\ Wind:}${template6\ \1\ wind_dir\ \ \ \ \ }
+
+#Weather:${if_up wlan0}$color Temp: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO temperature 120}F$color Clouds: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO cloud_cover 120}$color Wind: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_speed 120}km/h ${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_dir 120}${else}$color not online${endif}
+
+###########################################
+## LAYOUT AND STATISTICS BARS
+###########################################
 
 TEXT
-$color$hr
+#################
+## HOST & DATE ##
+#################
 $color5  $nodename${alignr 3}$color1${tztime America/Los_Angeles %A, %d %B, %H:%M%_4Z}
 $color$hr$color1
+##################
+## MUSIC PLAYER ##
+##################
 #${if_running mocp}Now Playing: ${alignr 1}$color5${scroll 30 3 $moc_artist - $moc_song}
 #$color$hr${endif}$color1
+#############
+## WEATHER ##
+#############
 Weather:${if_up wlan0}$color Temp: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO temperature 120}F$color Clouds: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO cloud_cover 120}$color Wind: $color5${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_speed 120}km/h ${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSFO wind_dir 120}${else}$color not online${endif}
+#Weather:${if_up wlan0}${template7 KSFO}${else}$color not online${endif}
 $color$hr$color1
+###########
+## STATS ##
+###########
 Uptime:$color $uptime$color1
 Battery: $color${battery_percent}% ${battery_time}$color1 ${alignr 1}Laptop Mode:$color ${if_match ${laptop_mode}>0}enabled${else}disabled${endif}$color1
 Frequency (in MHz):$color $freq$color1
@@ -99,13 +151,22 @@ File systems:
   /home $color${fs_used /home}/${fs_size /home} ${fs_bar 6 /home}$color1
 Entropy: $color${entropy_avail} / ${entropy_poolsize}$color1
 ${if_up wlan0}Networking:$color IP: $color5${addrs wlan0}$color AP: $color5${wireless_essid wlan0}$color1
-  Up:$color ${upspeed wlan0} $color1 Down:$color ${downspeed wlan0}${endif}
-$hr$color1
+  Up:$color ${upspeed wlan0} $color1 Down:$color ${downspeed wlan0}
+$color${stippled_hr 2}$color1${else}$color${stippled_hr 2}$color1${endif}
+###########
+## EMAIL ##
+###########
 Mail: 
 $color1 INBOX        New:${template1  } ${alignr 3}$color1 Seen:  ${alignr 3}${template2  } ${alignr 2}$color1 Total:${alignr 1}  ${template3  }
 $color1 OONI         New:${template1 .Tor.ooni}  ${alignr 3}$color1 Seen: ${alignr 3}${template2 .Tor.ooni} ${alignr 2}$color1 Total:${alignr 1} ${template3 .Tor.ooni}
 $color1 TOR-INTERNAL New:${template1 .Tor.tor-internal}  ${alignr 3}$color1 Seen: ${alignr 3}${template2 .Tor.tor-internal} ${alignr 2}$color1 Total:${alignr 1} ${template3 .Tor.tor-internal}
-$hr$color1
+#${template5 INBOX  }
+#${template5 OONI .Tor.ooni}
+#${template5 TOR-INTERNAL}
+${stippled_hr 2}$color1
+###############
+## PROCESSES ##
+###############
 Processes:$color $processes $color1 Running:$color $running_processes
 ${stippled_hr 2 }
 ${color aece92}Name           PID     CPU%   MEM%

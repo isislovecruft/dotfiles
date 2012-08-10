@@ -36,4 +36,4 @@ run_once("autocutsel", "-selection PRIMARY -fork &")
 run_once("sh " .. os.getenv("HOME") .. "/scripts/fix_keymap")
 
 -- Goddamn timeservers.
-run_once("sh ", "export LOCALTZ='America/Los_Angeles'")
+run_once("/bin/bash export LOCALTZ='America/Los_Angeles'")
