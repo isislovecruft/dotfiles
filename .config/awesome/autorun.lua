@@ -3,6 +3,9 @@
 --run_once("nm-applet") -- networking
 --run_once("wmname", "LG3D") -- java fix
 
+-- Set the root window background
+run_once("xsetroot", "-solid black")
+
 -- Set the cursor
 --run_once("xsetroot", "-cursor_name top_left_arrow")
 
@@ -17,7 +20,7 @@ run_once("xset", "c off")
 run_once("xset", "dpms 300 600 600")
 
 -- Autorepeat keys after 30 milliseconds, 15 keypresses per second
-run_once("xset", "r rate 230 20")
+run_once("xset", "r rate 250 22")
 
 -- Get the color defaults and terminal settings
 run_once("xrdb", "-load " .. os.getenv("HOME") .. "/.Xdefaults")
@@ -29,11 +32,11 @@ run_once("xscreensaver", "-nosplash")
 run_once("autocutsel", "-fork &")
 run_once("autocutsel", "-selection PRIMARY -fork &")
 
--- Start conky
---run_once("conky")
-
--- Fix the fucking keyboard so that Emacs works
-run_once("sh " .. os.getenv("HOME") .. "/scripts/fix_keymap")
+-- Start various programs:
+run_once("conky")
+run_once("pidgin")
+--run_once("firefox")
+run_once("urxvt", "-geometry 159x48+0-1")
 
 -- Goddamn timeservers.
-run_once("/bin/bash export LOCALTZ='America/Los_Angeles'")
+run_once("/bin/bash", "export LOCALTZ='America/Los_Angeles'")

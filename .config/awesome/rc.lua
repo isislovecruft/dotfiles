@@ -15,6 +15,9 @@ require("debian.menu")
 -- User Libraries
 require("vicious") 
 require("helpers")
+require("myplacesmenu")
+
+local keydoc = require("keydoc")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -112,9 +115,11 @@ myawesomemenu = {
 }
 
 mymainmenu = awful.menu({ items = { 
-           { "awesome", myawesomemenu, beautiful.awesome_icon },
-           { "debian", debian.menu.Debian_menu.Debian },
            { "open terminal", terminal, image(beautiful.pacman) },
+           { "files", myplacesmenu.myplacesmenu()},
+           { "debian", debian.menu.Debian_menu.Debian },
+           { "awesome", myawesomemenu, beautiful.awesome_icon },
+           { "hibernate", terminal .. " -e sudo pm-hibernate" },
            { "reboot", terminal .. " -e sudo shutdown -r -f -i now" },
            { "shutdown", terminal .. " -e sudo shutdown -i -p now" }
                                   }
@@ -236,35 +241,64 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
+    keydoc.group("Changing Screens"),
+    awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
+                "Move left"),
+    awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
+                "Move right"),
+    awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
+                "Restore history"),
 
+    keydoc.group("Switch Window Focus"),
     awful.key({ modkey,           }, "k",
         function ()
             awful.client.focus.byidx( 1)
             if client.focus then client.focus:raise() end
-        end),
+        end,
+        "Next window"),
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
-        end),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show({keygrabber=true}) end),
+        end,
+        "Previous Window"),
+    awful.key({ modkey,           }, "w", 
+        function () 
+            mymainmenu:show({keygrabber=true}) 
+        end,
+        "Show Awesome menu"),
 
-    -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx(  1)    end),
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx( -1)    end),
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative( 1) end),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative(-1) end),
-    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
+    keydoc.group("Layout Manipulation"),
+    awful.key({ modkey, "Shift"   }, "k", 
+        function () 
+            awful.client.swap.byidx(  1)    
+        end,
+        "Move to next window panel"),
+    awful.key({ modkey, "Shift"   }, "j", 
+        function () 
+            awful.client.swap.byidx( -1)    
+        end,
+        "Move to previous window panel"),
+    awful.key({ modkey, "Control" }, "k", 
+        function () 
+             awful.screen.focus_relative( 1) 
+        end,
+        "Change next to relative focus"),
+    awful.key({ modkey, "Control" }, "j", 
+        function () 
+            awful.screen.focus_relative(-1) 
+        end,
+        "Change previous to relative focus"),
+    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
+        "Go to urgent window"),
     awful.key({ modkey,           }, "Tab",
         function ()
             awful.client.focus.history.previous()
             if client.focus then
                 client.focus:raise()
             end
-        end),
+        end,
+        "Tab through recently viewed windows"),
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
@@ -282,6 +316,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
+
+    awful.key({ modkey, }, "F1", keydoc.display),
 
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end)

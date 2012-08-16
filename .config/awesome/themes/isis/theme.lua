@@ -20,16 +20,16 @@ theme.fg_normal = "#aaaaaa"
 theme.fg_focus  = "#ffffff"
 theme.fg_urgent = "#ffffff"
 theme.bg_normal = "#222222"
-theme.bg_focus = "#000000"
-theme.bg_urgent = "#ff0000"
+theme.bg_focus  = "#0B0B0B"
+theme.bg_urgent = "#aef4ba"
 -- }}}
 
 -- {{{ Borders
 -- XXX fucking hell fucking lua
 theme.border_width  = "1"
-theme.border_normal = "#555555"
-theme.border_focus  = "#535d6c"
-theme.border_marked = "#91231c"
+theme.border_normal = "#222222"
+theme.border_focus  = "#222222"
+theme.border_marked = "#aef4ba"
 -- }}}
 
 -- {{{ Titlebars
@@ -51,11 +51,14 @@ theme.titlebar_bg_normal = "#3F3F3F"
 -- You can add as many variables as
 -- you wish and access them by using
 -- beautiful.variable in your rc.lua
---theme.fg_widget        = "#AECF96"
---theme.fg_center_widget = "#88A175"
---theme.fg_end_widget    = "#FF5656"
---theme.bg_widget        = "#494B4F"
---theme.border_widget    = "#3F3F3F"
+theme.fg_widget                 = "#FFFFFF"
+theme.fg_widget_value           = "#FFFFFF"
+theme.fg_widget_value_important = "#FFFFFF"
+theme.fg_widget_clock           = "#FFFFFF"
+theme.fg_center_widget          = "#FFFFFF"
+theme.fg_end_widget             = "#1A1A1A"
+theme.bg_widget                 = "#222222"
+theme.border_widget             = "#444444"
 -- }}}
 
 theme.info = theme.dir .. "icons/info.png"

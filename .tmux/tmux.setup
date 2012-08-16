@@ -29,8 +29,8 @@
 splitw -h 'sudo -u debian-tor /usr/local/bin/tor -f /etc/tor/torrc; sudo -u debian-tor arm'
 killp -t 0                                          # This making a new pane and
 rename-window -t:1 arm                              # killing the first one 
-                                                    # nonsense is necessary for
-                                                    # tmux to keep its pants on
+selectp -t 0                                        # nonsense is necessary for
+splitw -h -p 40 'wicd-curses'                       # tmux to keep its pants on
 
 ## Uncomment the first line to start muttor instead:
 

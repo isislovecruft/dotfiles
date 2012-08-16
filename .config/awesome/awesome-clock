@@ -1,0 +1,28 @@
+#!/bin/bash
+###############################################################################
+#
+# awesome-clock.sh
+# ----------------
+# Clock for awesome statusbar.
+#
+# @author Isis Agora Lovecruft, 0x2cdb8b35
+# @date 30 July 2012
+# @version 0.0.1
+#______________________________________________________________________________
+# Changelog:
+###############################################################################
+
+CLOCK_SCRIPT="/home/isis/scripts/utcdammit -c"
+
+while true ; do
+    if [ -S ~/.awesome_ctl.0 ] ; then
+        while true ; do
+            echo "0 widget_tell mystatusbar clock text "   " $($CLOCK_SCRIPT)"
+            ## An empty line flushes awesome
+            echo ""
+            sleep 1
+        done | awesome-client
+    else
+        sleep 1
+    fi
+done

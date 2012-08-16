@@ -32,6 +32,8 @@ fi
 
 if [[ -n $HOME/music/"$2" ]]; then
     ffmpeg -i $YTFILE -acodec libmp3lame -ac 2 -ab 128k -vn -y $HOME/music/"$2"
+    ## XXX we're supposed to switch to using avconv from libav-tools
+    #avconv -i $YTFILE -acodec libmp3lame -ac 2 
     rm $YTFILE
 else
     echo; echo -e "Please choose a different location:  \033[0m"

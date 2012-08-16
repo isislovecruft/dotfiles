@@ -1,9 +1,0 @@
-neww -n oonidev
-selectp -t 0
-command-prompt "cd $HOME/dev/torproject/ooni-probe"
-command-prompt "export PYTHONPATH=`pwd`"
-splitw -h
-selectp -t 1
-splitw -v
-selectp -t 0
-select-layout b372,182x56,0,0{105x56,0,0,76x56,106,0[76x24,106,0,76x31,106,25]}

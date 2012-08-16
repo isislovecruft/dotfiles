@@ -5,7 +5,7 @@
 timeout:	0:10:00
 cycle:		0:10:00
 lock:		True
-lockTimeout:	0:00:00
+lockTimeout:	0:00:01
 passwdTimeout:	0:00:20
 visualID:	best
 installColormap: False
@@ -24,8 +24,8 @@ fadeTicks:	20
 captureStderr:	False
 ignoreUninstalledPrograms: True
 font:		*-medium-r-*-140-*-m-*
-dpmsEnabled:	True
-dpmsQuickOff:	True
+dpmsEnabled:	False
+dpmsQuickOff:	False
 ##screen blackout
 dpmsStandby:	0:15:00
 ##power-saving
@@ -37,8 +37,10 @@ grabVideoFrames:    False
 chooseRandomImages: False
 imageDirectory:	
 
-mode:		one
-selected:	187
+#mode:		one
+#selected:	187
+
+mode: blank
 
 textMode:	program
 textLiteral:	XScreenSaver

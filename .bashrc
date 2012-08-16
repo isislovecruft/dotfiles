@@ -117,50 +117,9 @@ export GPG_TTY
 
 ## Environment variables
 ########################
-export TZ=UTC                              # Blue telephone box
-export LOCALTZ='America/Los_Angeles'
-export EDITOR="/usr/bin/emacs -nw"         # (Hopefully this doesn't) Uses X 
-export VISUAL="/usr/bin/emacs -nw"
-export BROWSER=/usr/bin/firefox
-#export SSH_AUTH_SOCK=/tmp/ssh-agent
-#export SSH_AGENT_PID=$(pgrep ssh-agent)
 
-## Path 
-#######################
-export PATH=${PATH}:$HOME/dev/web/hyde/          ## Export path to hyde.py
-export PATH=$PATH:$HOME/scripts                  ## Export path to scripts dir
-export PATH=$PATH:$HOME/dev/git-hg/bin           ## Export path to git-hg
-export PATH=$PATH:/usr/local/go/bin              ## Export path for Go
-export PATH=$PATH:$HOME/dev/tahoe-lafs/bin/      ## Export path for Tahoe
-
-## Fix sudo? WTF?
-export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
-
-## PYTHON
-export PYTHONPATH=$PYTHONPATH:$HOME/dev/torproject/ooni-probe
-export PYTHONPATH=$PYTHONPATH:/usr/share/pyshared
-
-## PERL
-export PERL_LOCAL_LIB_ROOT="/home/isis/.perl5";
-export PERL_MB_OPT="--install_base /home/isis/.perl5";
-export PERL_MM_OPT="INSTALL_BASE=/home/isis/.perl5";
-export PERL5LIB="/home/isis/.perl5/lib/perl5/x86_64-linux-gnu-thread-multi:/home/isis/.perl5/lib/perl5";
-export PATH="/home/isis/.perl5/bin:$PATH";
-
-## Export path for android NDK
-export NDKROOT=$HOME/dev/android/android-ndk-r7
-
-## Add export path for Android SDK platform-tools and tools:
-export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/tools
-export PATH=${PATH}:$HOME/dev/android/android-sdk-linux/platform-tools
-
-## Export paths for common toolchains for android NDK
-## Leave these commented out unless you're specifically cross-compiling 
-## for ArmV7:
-
-#export AR=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ar
-#export LD=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-ld
-#export CC=$NDKROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-gcc
+## Sourced to $HOME/.bashrc.env
+. $HOME/.bashrc.env
 
 ##############################################################################
 ## Functions
@@ -181,6 +140,34 @@ function goth
     else
         LIGHT="off"
         echo; echo "The day star hates you too."; echo;
+    fi
+}
+
+function extract () {
+   if [ -f $1 ] ; then
+       case $1 in
+           *.tar.bz2)tar xvjf $1 && cd $(basename "$1" .tar.bz2) ;;
+           *.tar.gz)tar xvzf $1 && cd $(basename "$1" .tar.gz) ;;
+           *.tar.xz)tar Jxvf $1 && cd $(basename "$1" .tar.xz) ;;
+           *.bz2)bunzip2 $1 && cd $(basename "$1" /bz2) ;;
+           *.rar)unrar x $1 && cd $(basename "$1" .rar) ;;
+           *.gz)gunzip $1 && cd $(basename "$1" .gz) ;;
+           *.tar)tar xvf $1 && cd $(basename "$1" .tar) ;;
+           *.tbz2)tar xvjf $1 && cd $(basename "$1" .tbz2) ;;
+           *.tgz)tar xvzf $1 && cd $(basename "$1" .tgz) ;;
+           *.zip)unzip $1 && cd $(basename "$1" .zip) ;;
+           *.Z)uncompress $1 && cd $(basename "$1" .Z) ;;
+           *.7z)7z x $1 && cd $(basename "$1" .7z) ;;
+           *)echo "don't know how to extract '$1'..." ;;
+       esac
+   else
+       echo "'$1' is not a valid file!"
+   fi
+ }
+
+function only () {
+    if [ -z "`ps -Af | grep -o -w ".*$1" | grep -v grep | grep -v only`" ]; then
+        $@
     fi
 }
 
@@ -257,6 +244,7 @@ alias boilerpy="boilerplate.sh $HOME/scripts/boilerplate-python $1 "
 alias boilersh="boilerplate.sh $HOME/scripts/boilerplate-bash $1 "
 alias gitdate='. gitdate.sh'
 alias ipython='ipython --no-banner'
+alias pathooni="if [[ \"$PYTHONPATH\" == \"\" ]] ; then export PYTHONPATH=$HOME/dev/torproject/ooni-probe && cd $PYTHONPATH && tmux source-file $HOME/.tmux/tmux.oonidev ; else unset PYTHONPATH; fi"
 
 ##
 ## Logs & Processes
@@ -270,7 +258,7 @@ alias damn='sudo kill -9 `pgrep $2` '
 ##
 ## Drives
 ###################
-alias chronophasia='sudo mount /dev/sdb1 /media/usb0 && truecrypt -t --mount=/media/usb0/Private -k "" --volume-type=normal --protect-hidden=no --protection-password="" /media/truecrypt1'
+#alias chronophasia='sudo mount /dev/sdb1 /media/usb0 && truecrypt -t --mount=/media/usb0/Private -k "" --volume-type=normal --protect-hidden=no --protection-password="" /media/truecrypt1'
 
 ##
 ## Networking

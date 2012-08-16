@@ -25,7 +25,7 @@ XTerm*visualBell: False
 !URxvt*termName: xterm
 ! but this one is better:
 URxvt*termName: screen-256color
-URxvt.perl-ext-common: default,matcher
+URxvt.perl-ext-common: default,matcher,url-select
 URxvt.urlLauncher: /usr/bin/firefox
 URxvt.matcherButton: 1
 ! keysyms are becoming rarer by the stroke...
@@ -36,6 +36,8 @@ URxvt.matcherButton: 1
 !     emacs   = most of the C and M keys
 !Urxvt.keysym.C-Shift-l: perl:matcher:last
 !URxvt.keysym.C-l:       perl:matcher:list
+URxvt.keysym.Mod4-o:     perl:url-select:select_next
+URxvt.underlineURLs:     true
 !yeahconsole*term: urxvt
 !yeahconsole*screenWidth:
 !yeahconsole*consoleHeight: 50
